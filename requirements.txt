@@ -1,0 +1,8 @@
+pip
+setuptools
+wheel
+numpy
+pandas
+pandas_datareader
+yfinance
+seaborn
