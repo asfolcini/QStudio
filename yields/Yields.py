@@ -3,13 +3,11 @@
 # (c) Alberto Sfolcini <a.sfolcini@gmail.com>
 # www.surprisalx.com
 # =======================================================================================================================
-import datetime
-
+import math
 import matplotlib.pyplot as plt
 from core.Datahub import datahub
 import core.config as cfg
 import numpy as np
-import calendar
 
 class Yields:
     """
@@ -27,7 +25,6 @@ class Yields:
         self.s = _s
         self.show_chart = show
         self.overlay = overlay
-
 
     def generate(self, periods=90):
         """
@@ -47,6 +44,8 @@ class Yields:
             r['Returns'] = ((r['Close']/r['Close'].shift(1)) -1)*100
             r.dropna(inplace = True)
             ss = len(self.s.get_symbols())
+            volatility = r['Returns'].std()
+            print(str(s) + " volatility("+str(periods)+")="+str(volatility))
             if ss == 1 or self.overlay:
                 axis.grid(True, linestyle='-.')
                 axis.set_title('Yields')
@@ -69,6 +68,27 @@ class Yields:
         else:
             plt.savefig(cfg.OUTPUT_REPOSITORY+"Yields_"+cfg.OUTPUT_FILENAME)
 
+
+    def get_volatility(self):
+        """
+        COMPUTE VOLATILITY
+        """
+        for s in self.s.get_symbols():
+            r = self.s.load_data(s)
+            r['Symbol'] = s
+            r['Returns'] = ((r['Close']/r['Close'].shift(1)) -1)*100
+            r.dropna(inplace = True)
+            daily = r['Returns'].std()
+            monthly = math.sqrt(21) * r['Returns'].std()
+            annually = math.sqrt(252) * r['Returns'].std()
+            print(str(s)+' Volatility: Daily = {:.2f}%'.format(daily),' Monthly = {:.2f}%'.format(monthly),' Annually = {:.2f}%'.format(annually))
+
+    def get_yields(self,_symbol):
+        r = self.s.load_data(_symbol)
+        r['Symbol'] = _symbol
+        r['Returns'] = ((r['Close']/r['Close'].shift(1)) -1)*100
+        r.dropna(inplace = True)
+        return r
 
     def generate_week(self, periods=90):
         """
@@ -111,3 +131,34 @@ class Yields:
             plt.show()
         else:
             plt.savefig(cfg.OUTPUT_REPOSITORY+"Yields_"+cfg.OUTPUT_FILENAME)
+
+
+    def autocorrelation(self):
+
+        for s in self.s.get_symbols():
+            df = self.get_yields(s)
+
+            from statsmodels.tsa.stattools import adfuller
+            # Check for stationarity of the time-series data
+            # We will look for p-value. In case, p-value is less than 0.05, the time series
+            # data can said to have stationarity
+            df_stationarityTest = adfuller(df['Returns'], autolag='AIC')
+            if (df_stationarityTest[1]<0.05):
+               test_pass = "PASSED"
+            else:
+               test_pass = "FAILED"
+            print("P-value: ", df_stationarityTest[1], " is < 0.05 ? ==> STATIONARITY TEST ", test_pass)
+
+            # Next step is to find the order of AR model to be trained
+            # for this, we will plot partial autocorrelation plot to assess
+            # the direct effect of past data on future data
+            from statsmodels.graphics.tsaplots import plot_pacf
+            pacf = plot_pacf(df['Returns'], lags=21, method='ywm')
+            plt.title('Autocorrelation '+s+' (last 21 periods)')
+            if not self.show_chart:
+                plt.savefig(cfg.OUTPUT_REPOSITORY+"Autocorrelation_"+s.replace(".", "")+"_"+cfg.OUTPUT_FILENAME)
+
+        if self.show_chart:
+            plt.show()
+
+        return

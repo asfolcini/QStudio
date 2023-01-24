@@ -110,6 +110,27 @@ def yields_weekly(_symbols, show=True, periods=252, overlay=False):
     ys = Yields(s, show,overlay=overlay)
     ys.generate_week(periods)
 
+def volatility(_symbols):
+    """
+    VOLATILITY
+    """
+    header()
+    s = datahub(loadfromconfig=True)
+    s.set_symbols(_symbols)
+    ys = Yields(s, False, overlay=False)
+    ys.get_volatility()
+
+def autocorrelation(_symbols, show=True):
+    """
+    AUTOCORRELATION
+    :param _symbols:
+    :return:
+    """
+    header()
+    s = datahub(loadfromconfig=True)
+    s.set_symbols(_symbols)
+    ys = Yields(s, show , overlay=False)
+    ys.autocorrelation()
 
 def main():
     """
@@ -234,6 +255,27 @@ def main():
         if args[1] == '--symbols' and args[2] != '' and args[4] != '':
             yields_weekly(args[2], False, int(args[4]))
             return
+
+    """
+       VOLATILITY
+    """
+    if len(args) == 3 and args[0] == '--volatility':
+        if args[1] == '--symbols' and args[2] != '':
+            volatility(args[2])
+            return
+    """
+       AUTOCORRELATION
+    """
+    if len(args) == 3 and args[0] == '--autocorrelation':
+        if args[1] == '--symbols' and args[2] != '':
+            autocorrelation(args[2], True)
+            return
+    if len(args) == 4 and args[0] == '--autocorrelation' and args[3] == '--save':
+        if args[1] == '--symbols' and args[2] != '':
+            autocorrelation(args[2], False)
+            return
+
+
     usage()
 
 
@@ -277,6 +319,15 @@ def usage():
     print(" --yields_weekly --symbols [symbols] --save                      : save weekly yields chart for given symbols in repository "+cfg.OUTPUT_REPOSITORY)
     print(" --yields_weekly --symbols [symbols] --periods [periods]         : show weekly yields chart for given symbols for the given periods")
     print(" --yields_weekly --symbols [symbols] --periods [periods] --save  : save weekly yields chart for given symbols for the given periods")
+
+    # VOLATILITY WEEKLY
+    print(" VOLATILITY")
+    print(" --volatility --symbols [symbols] --periods       : find volatility for a given periods")
+
+    # AUTOCORRELATION
+    print(" AUTOCORRELATION")
+    print(" --autocorrelation --symbols [symbols]         : show autocorrelation AR(x) of last 21 periods")
+    print(" --autocorrelation --symbols [symbols] --save  : save autocorrelation AR(x) of last 21 periods")
 
 
     # DATA HUB
