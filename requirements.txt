@@ -7,3 +7,5 @@ pandas_datareader
 yfinance
 seaborn
 statsmodels
+plotly
+kaleido

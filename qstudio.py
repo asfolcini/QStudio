@@ -10,9 +10,10 @@ from core.Datahub import datahub
 import os
 from correlation_matrix.CorrelationMatrix import CorrelationMatrix
 from yields.Yields import Yields
+from core.charts.Charts import Charts
 
 # QStudio version
-VERSION = "v0.1.0"
+VERSION = "v0.2.0"
 
 
 def datahub_update_all():
@@ -141,6 +142,22 @@ def autocorrelation(_symbols, show=True):
     s.set_symbols(_symbols)
     ys = Yields(s, show , overlay=False)
     ys.autocorrelation()
+
+def chart(_symbols, show=True, _periods=9999, candles=False):
+    """
+    CHART candlesticks
+    :param _symbols:
+    :param show:
+    :return:
+    """
+    header()
+    s = datahub(loadfromconfig=True)
+    s.set_symbols(_symbols)
+    c = Charts(s, show, overlay=False)
+    if candles:
+        c.generate(_periods)
+    else:
+        c.generate_line(_periods)
 
 def main():
     """
@@ -304,6 +321,43 @@ def main():
             autocorrelation(args[2], False)
             return
 
+    """
+       CHART
+    """
+    if len(args) == 3 and args[0] == '--chart_candles':
+        if args[1] == '--symbols' and args[2] != '':
+            chart(args[2], candles=True)
+            return
+    if len(args) == 4 and args[0] == '--chart_candles' and args[3] == '--save':
+        if args[1] == '--symbols' and args[2] != '':
+            chart(args[2], show=False ,candles=True)
+            return
+    if len(args) == 5 and args[0] == '--chart_candles' and args[3] == '--periods':
+        if args[1] == '--symbols' and args[2] != '':
+            chart(args[2], show=True , _periods=int(args[4]) ,candles=True)
+            return
+    if len(args) == 6 and args[0] == '--chart_candles' and args[3] == '--periods' and args[5] == '--save':
+        if args[1] == '--symbols' and args[2] != '':
+            chart(args[2], show=False , _periods=int(args[4]) ,candles=True)
+            return
+
+    if len(args) == 3 and args[0] == '--chart':
+        if args[1] == '--symbols' and args[2] != '':
+            chart(args[2], candles=False)
+            return
+    if len(args) == 4 and args[0] == '--chart' and args[3] == '--save':
+        if args[1] == '--symbols' and args[2] != '':
+            chart(args[2], show=False, candles=False)
+            return
+    if len(args) == 5 and args[0] == '--chart' and args[3] == '--periods':
+        if args[1] == '--symbols' and args[2] != '':
+            chart(args[2], show=True, _periods=int(args[4]) , candles=False)
+            return
+    if len(args) == 6 and args[0] == '--chart' and args[3] == '--periods' and args[5] == '--save':
+        if args[1] == '--symbols' and args[2] != '':
+            chart(args[2], show=False, _periods=int(args[4]) , candles=False)
+            return
+
 
     usage()
 
@@ -373,6 +427,11 @@ def usage():
     print(" --datahub --update-all        : update the whole datahub from yfinance")
     print(" --datahub --update [symbols]  : update the given symbols separated by comma")
     print("   example: --datahub update AAPL,G,MS,XOM")
+
+    # CHART
+    print(" CHARTS ")
+    print(" --chart --symbols [symbols]        : show candlestick chart of given symbols")
+
     print(" USAGE")
     # USAGE
     print(" --help                      : usage instructions")
