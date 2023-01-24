@@ -5,6 +5,8 @@
 # =======================================================================================================================
 import math
 import matplotlib.pyplot as plt
+import pandas as pd
+
 from core.Datahub import datahub
 import core.config as cfg
 import numpy as np
@@ -132,6 +134,48 @@ class Yields:
         else:
             plt.savefig(cfg.OUTPUT_REPOSITORY+"Yields_"+cfg.OUTPUT_FILENAME)
 
+    def generate_month(self, periods=9999):
+        """
+          GENERATE YIELD CHART GROUP BY MONTH based on the last N periods, by default periods=90
+          """
+        fsize = figsize=(6,4)
+        if len(self.s.get_symbols()) == 1 or self.overlay:
+            figure, axis = plt.subplots(figsize=fsize)
+        else:
+            figure, axis = plt.subplots(len(self.s.get_symbols()), sharex=True, figsize=fsize)
+
+        months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+        i = 0
+        for s in self.s.get_symbols():
+            r = self.s.load_data(s, periods)
+            r['Symbol'] = s
+            r['Returns'] = ((r['Close']/r['Close'].shift(1)) -1)*100
+            r['month'] = pd.DatetimeIndex(r['Date']).month
+            month_df = r[['month', 'Returns']].groupby(['month'], sort=False).mean().sort_index()
+            month_df['x'] = month_df.index
+            for m in month_df['x']:
+                month_df['x'][m] = months[m-1]
+            r.dropna(inplace = True)
+
+            ss = len(self.s.get_symbols())
+            if ss == 1:
+                axis.grid(True, linestyle='-.')
+                axis.set_title('Monthly yields '+str(s)+"(last "+str(periods)+" periods)")
+                colorformat = np.where(month_df['Returns']>=0, 'g','r')
+                axis.bar(month_df['x'], month_df['Returns'], color=colorformat)
+            else:
+                axis[i].grid(True, linestyle='-.')
+                axis[i].set_title(str(s))
+                colorformat = np.where(r['Returns']>=0, 'g','r')
+                axis[i].bar(month_df['x'], month_df['Returns'], color=colorformat)
+            i = i + 1
+
+        figure.tight_layout()
+        if self.show_chart:
+            plt.show()
+        else:
+            plt.savefig(cfg.OUTPUT_REPOSITORY+"Yields_"+cfg.OUTPUT_FILENAME)
 
     def autocorrelation(self):
 

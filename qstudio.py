@@ -110,6 +110,16 @@ def yields_weekly(_symbols, show=True, periods=252, overlay=False):
     ys = Yields(s, show,overlay=overlay)
     ys.generate_week(periods)
 
+def yields_monthly(_symbols, show=True, periods=9999, overlay=False):
+    """
+    YIELDS WEEKLY
+    """
+    header()
+    s = datahub(loadfromconfig=True)
+    s.set_symbols(_symbols)
+    ys = Yields(s, show,overlay=overlay)
+    ys.generate_month(periods)
+
 def volatility(_symbols):
     """
     VOLATILITY
@@ -255,6 +265,25 @@ def main():
         if args[1] == '--symbols' and args[2] != '' and args[4] != '':
             yields_weekly(args[2], False, int(args[4]))
             return
+    """
+    YIELDS_MONTHLY
+    """
+    if len(args) == 3 and args[0] == '--yields_monthly':
+        if args[1] == '--symbols' and args[2] != '':
+            yields_monthly(args[2], True)
+            return
+    if len(args) == 4 and args[0] == '--yields_monthly' and args[3] == '--save':
+        if args[1] == '--symbols' and args[2] != '':
+            yields_monthly(args[2], False)
+            return
+    if len(args) == 5 and args[0] == '--yields_monthly' and args[3] == '--periods':
+        if args[1] == '--symbols' and args[2] != '' and args[4] != '':
+            yields_monthly(args[2], True, int(args[4]))
+            return
+    if len(args) == 6 and args[0] == '--yields_monthly' and args[3] == '--periods' and args[5] == '--save':
+        if args[1] == '--symbols' and args[2] != '' and args[4] != '':
+            yields_monthly(args[2], False, int(args[4]))
+            return
 
     """
        VOLATILITY
@@ -319,6 +348,14 @@ def usage():
     print(" --yields_weekly --symbols [symbols] --save                      : save weekly yields chart for given symbols in repository "+cfg.OUTPUT_REPOSITORY)
     print(" --yields_weekly --symbols [symbols] --periods [periods]         : show weekly yields chart for given symbols for the given periods")
     print(" --yields_weekly --symbols [symbols] --periods [periods] --save  : save weekly yields chart for given symbols for the given periods")
+
+    # YIELDS MONTHLY
+    print(" YIELDS MONTHLY")
+    print(" --yields_monthly --symbols [symbols]                             : show monthly yields for the given symbols")
+    print(" --yields_monthly --symbols [symbols] --save                      : save monthly yields chart for given symbols in repository "+cfg.OUTPUT_REPOSITORY)
+    print(" --yields_monthly --symbols [symbols] --periods [periods]         : show monthly yields chart for given symbols for the given periods")
+    print(" --yields_monthly --symbols [symbols] --periods [periods] --save  : save monthly yields chart for given symbols for the given periods")
+
 
     # VOLATILITY WEEKLY
     print(" VOLATILITY")
