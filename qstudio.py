@@ -6,10 +6,10 @@
 import datetime
 import sys
 import core.config as cfg
-from core.Datahub import datahub
+from core.Datahub import Datahub
 import os
-from correlation_matrix.CorrelationMatrix import CorrelationMatrix
-from yields.Yields import Yields
+from core.correlation_matrix.CorrelationMatrix import CorrelationMatrix
+from core.yields.Yields import Yields
 from core.charts.Charts import Charts
 
 # QStudio version
@@ -21,7 +21,7 @@ def datahub_update_all():
     DATAHUB_UPDATE_ALL: update all the specified symbols in configuration config file
     """
     header()
-    s = datahub(loadfromconfig=True)
+    s = Datahub(loadfromconfig=True)
     s.update_data()
 
 
@@ -30,7 +30,7 @@ def datahub_update(_symbols):
     DATAHUB_UPDATE: update specified symbols, can be passed as a string separated by comma
     """
     header()
-    s = datahub(loadfromconfig=False)
+    s = Datahub(loadfromconfig=False)
     s.set_symbols(_symbols)
     s.update_data()
 
@@ -51,7 +51,7 @@ def config_symbols():
     """
     header()
     print("CONFIGURED Symbols in " + cfg.DATA_REPOSITORY)
-    for x in datahub(loadfromconfig=True).get_symbols():
+    for x in Datahub(loadfromconfig=True).get_symbols():
         print(" - " + str(x))
 
 
@@ -75,7 +75,7 @@ def correlation_matrix_show(show=True,periods=21):
     CORRELATION_MATRIX_SHOW: show correlation matrix for the configured symbols
     """
     header()
-    s = datahub(loadfromconfig=True)
+    s = Datahub(loadfromconfig=True)
     cm = CorrelationMatrix(s, show)
     cm.generate(periods)
 
@@ -86,7 +86,7 @@ def correlation_matrix_symbols(_symbols, show=True,periods=21):
     CORRELATION_MATRIX_SYMBOLS: show correlation matrix for the given symbols
     """
     header()
-    s = datahub(loadfromconfig=True)
+    s = Datahub(loadfromconfig=True)
     s.set_symbols(_symbols)
     cm = CorrelationMatrix(s, show)
     cm.generate(periods)
@@ -96,7 +96,7 @@ def yields(_symbols, show=True, periods=252, overlay=False):
     YIELDS
     """
     header()
-    s = datahub(loadfromconfig=True)
+    s = Datahub(loadfromconfig=True)
     s.set_symbols(_symbols)
     ys = Yields(s, show,overlay=overlay)
     ys.generate(periods)
@@ -106,7 +106,7 @@ def yields_weekly(_symbols, show=True, periods=252, overlay=False):
     YIELDS WEEKLY
     """
     header()
-    s = datahub(loadfromconfig=True)
+    s = Datahub(loadfromconfig=True)
     s.set_symbols(_symbols)
     ys = Yields(s, show,overlay=overlay)
     ys.generate_week(periods)
@@ -116,7 +116,7 @@ def yields_monthly(_symbols, show=True, periods=9999, overlay=False):
     YIELDS WEEKLY
     """
     header()
-    s = datahub(loadfromconfig=True)
+    s = Datahub(loadfromconfig=True)
     s.set_symbols(_symbols)
     ys = Yields(s, show,overlay=overlay)
     ys.generate_month(periods)
@@ -126,7 +126,7 @@ def volatility(_symbols):
     VOLATILITY
     """
     header()
-    s = datahub(loadfromconfig=True)
+    s = Datahub(loadfromconfig=True)
     s.set_symbols(_symbols)
     ys = Yields(s, False, overlay=False)
     ys.get_volatility()
@@ -138,7 +138,7 @@ def autocorrelation(_symbols, show=True):
     :return:
     """
     header()
-    s = datahub(loadfromconfig=True)
+    s = Datahub(loadfromconfig=True)
     s.set_symbols(_symbols)
     ys = Yields(s, show , overlay=False)
     ys.autocorrelation()
@@ -151,7 +151,7 @@ def chart(_symbols, show=True, _periods=9999, candles=False):
     :return:
     """
     header()
-    s = datahub(loadfromconfig=True)
+    s = Datahub(loadfromconfig=True)
     s.set_symbols(_symbols)
     c = Charts(s, show, overlay=False)
     if candles:

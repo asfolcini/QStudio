@@ -7,7 +7,7 @@ import math
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from core.Datahub import datahub
+from core.Datahub import Datahub
 import core.config as cfg
 import numpy as np
 import plotly.graph_objects as go
@@ -19,7 +19,7 @@ class Charts:
     call the generate() method
     """
     overlay = False
-    s = datahub()
+    s = Datahub()
     show_chart = True
     """
     INIT

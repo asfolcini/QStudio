@@ -8,16 +8,18 @@ import core.utils as utils
 import yfinance as yf
 import os
 import pandas
+from datetime import datetime
 
 
-class datahub:
+class Datahub:
     """
     SYMBOLS CLASS ( download from yfinance, load the dataset, update data etc... )
     """
 
     symbols_filepath = ""
     symbols = []
-
+    date_start = None
+    date_end = None
 
     def __init__(self, loadfromconfig=True):
         """
@@ -26,6 +28,10 @@ class datahub:
         if loadfromconfig:
             self.symbols = utils.load_from_file(cfg.SYMBOLS_FILEPATH).split(",")
 
+
+    def set_period(self, date_start=None, date_end=None):
+        self.date_start = datetime.strptime(date_start, '%Y-%m-%d %H:%M:%S')
+        self.date_end = datetime.strptime(date_end, '%Y-%m-%d %H:%M:%S')
 
     def get_symbols(self):
         """
@@ -60,6 +66,13 @@ class datahub:
                 dataset = pandas.read_csv(fp, parse_dates=['Date']).tail(lastperiods)
             else:
                 dataset = pandas.read_csv(fp, parse_dates=['Date'])
+            if self.date_start is not None:
+                print("DEBUG FROM: "+str(self.date_start))
+                print("DEBUG END : "+str(self.date_end))
+                dataset = pandas.read_csv(fp, parse_dates=['Date'])
+                #greater than the start date and smaller than the end date
+                mask = (dataset['Date'] > self.date_start) & (dataset['Date'] <= self.date_end)
+                dataset = dataset[mask]
             return dataset
         else:
             if cfg.VERBOSE: print(fp+" does not exist, checking from yfinance...", end="")
