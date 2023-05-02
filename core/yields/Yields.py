@@ -167,7 +167,7 @@ class Yields:
             else:
                 axis[i].grid(True, linestyle='-.')
                 axis[i].set_title(str(s))
-                colorformat = np.where(r['Returns']>=0, 'g','r')
+                colorformat = np.where(month_df['Returns']>=0, 'g','r')
                 axis[i].bar(month_df['x'], month_df['Returns'], color=colorformat)
             i = i + 1
 

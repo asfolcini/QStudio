@@ -67,8 +67,6 @@ class Datahub:
             else:
                 dataset = pandas.read_csv(fp, parse_dates=['Date'])
             if self.date_start is not None:
-                print("DEBUG FROM: "+str(self.date_start))
-                print("DEBUG END : "+str(self.date_end))
                 dataset = pandas.read_csv(fp, parse_dates=['Date'])
                 #greater than the start date and smaller than the end date
                 mask = (dataset['Date'] > self.date_start) & (dataset['Date'] <= self.date_end)

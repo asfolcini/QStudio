@@ -4,8 +4,12 @@ wheel
 numpy
 pandas
 pandas_datareader
-yfinance
+matplotlib
+yfinance==0.2.12
 seaborn
 statsmodels
 plotly
 kaleido
+pyfolio-reloaded
+prettytable
+names

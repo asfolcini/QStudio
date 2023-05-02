@@ -11,9 +11,10 @@ import os
 from core.correlation_matrix.CorrelationMatrix import CorrelationMatrix
 from core.yields.Yields import Yields
 from core.charts.Charts import Charts
-
-# QStudio version
-VERSION = "v0.2.0"
+from core.random_equity import random_equity as random_eq
+from core.check_strategy import check_strategy as cs
+import names
+import webbrowser
 
 
 def datahub_update_all():
@@ -158,6 +159,42 @@ def chart(_symbols, show=True, _periods=9999, candles=False):
         c.generate(_periods)
     else:
         c.generate_line(_periods)
+
+def random_equity(folder="./equities/", nr=1):
+    today = datetime.date.today()
+    # generate random equities
+    for i in range(nr):
+        rand_name = names.get_first_name(gender='female')
+        print("Generating random equity: "+str(rand_name))
+        random_eq.generate_random_equity(datetime.date(year=2010, month=3, day=1),
+                                         datetime.date(year=today.year, month=today.month, day=today.day),
+                                         filepath=str(os.path.join(folder, ''))+str(rand_name)+"_eq.csv")
+    return
+
+def random_equity_delete(folder="./equities/"):
+    print("Cleaning folder "+str(folder))
+    for filename in os.listdir(folder):
+        f = os.path.join(folder, filename)
+        if os.path.isfile(f):
+            os.remove(f)
+            print(" . deleting file "+str(f))
+    return
+
+def check_strategy_help():
+    print("Redirect to "+cfg.CHECK_STRATEGY_HELP_URL)
+    webbrowser.open(cfg.CHECK_STRATEGY_HELP_URL)
+    return
+
+def check_strategy(folder="./equities/", report=False):
+    print("Check Strategy in folder "+str(folder))
+    cs.check_strategies(folder, report)
+    return
+
+def check_single_strategy(equity_filepath="./equities/", report=False):
+    print("Check single Strategy with equity file: "+str(equity_filepath))
+    cs.check_single_strategy(equity_filepath, equity_filepath, report)
+    return
+
 
 def main():
     """
@@ -358,6 +395,46 @@ def main():
             chart(args[2], show=False, _periods=int(args[4]) , candles=False)
             return
 
+    """
+    RANDOM EQUITIES
+    """
+    if len(args) == 4 and args[0] == '--random_equity':
+        if args[1] == '--folder' and args[2] != '' and args[3] != '':
+            random_equity(args[2], int(args[3]))
+            return
+    if len(args) == 4 and args[0] == '--random_equity':
+        if args[1] == '--clean' and args[2] == '--folder' and args[3] != '':
+            random_equity_delete(args[3])
+            return
+
+    """
+    CHECK STRATEGY
+    """
+    if len(args) == 2 and args[0] == '--check_strategy':
+        if args[1] == '--help':
+            check_strategy_help()
+            return
+    if len(args) == 3 and args[0] == '--check_strategy':
+        if args[1] == '--folder' and args[2] != '':
+            check_strategy(args[2], report=False)
+            return
+    if len(args) == 4 and args[0] == '--check_strategy':
+        if args[1] == '--folder' and args[2] != '' and args[3]=='--report':
+            check_strategy(args[2], report=True)
+            return
+
+    """
+        CHECK SINGLE STRATEGY
+        """
+    if len(args) == 3 and args[0] == '--check_single_strategy':
+        if args[1] == '--file' and args[2] != '':
+            check_single_strategy(args[2], report=False)
+            return
+    if len(args) == 4 and args[0] == '--check_single_strategy':
+        if args[1] == '--file' and args[2] != '' and args[3]=='--report':
+            check_single_strategy(args[2], report=True)
+            return
+
 
     usage()
 
@@ -430,7 +507,23 @@ def usage():
 
     # CHART
     print(" CHARTS ")
-    print(" --chart --symbols [symbols]        : show candlestick chart of given symbols")
+    print(" --chart --symbols [symbols]                             : show candlestick chart of given symbols")
+    print(" --chart --symbols [symbols] --save                      : save candlestick chart of given symbols")
+    print(" --chart --symbols [symbols] --periods [periods]         : show candlestick chart of given symbols, for given periods")
+    print(" --chart --symbols [symbols] --periods [periods] --save  : save candlestick chart of given symbols, for given periods")
+
+    # RANDOM EQUITY
+    print(" RANDOM EQUITIES")
+    print(" --random_equity --folder [folder] [Nr]  : generate a number of random equities in the given folder")
+    print(" --random_equity --clean [folder]        : clean the given folder")
+
+    # CHECK STRATEGIES
+    print(" CHECK STRATEGIES")
+    print(" --check_strategy --help                          : show how to use the check strategy")
+    print(" --check_strategy --folder [folder]               : run the check strategy, no charts")
+    print(" --check_strategy --folder [folder] --report      : run the check strategy and produce a report")
+    print(" --check_single_strategy --file [folder]          : run the check strategy, no charts")
+    print(" --check_single_strategy --file [folder] --report : run the check strategy and produce a report")
 
     print(" USAGE")
     # USAGE
@@ -441,8 +534,8 @@ def header():
     HEADER
     """
     print("-" * 120)
-    print(" Q S t u d i o  " + str(VERSION))
-    print(" " + datetime.date.today().strftime("%Y") + " (c) Alberto Sfolcini <a.sfolcini@gmail.com>")
+    print(" Q S t u d i o  " + str(cfg.VERSION))
+    print(" " + datetime.date.today().strftime("%Y") + " (c) "+str(cfg.AUTHOR))
     print(" www.surprisalx.com")
     print("-" * 120)
 

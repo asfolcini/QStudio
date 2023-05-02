@@ -12,14 +12,20 @@ class OrderStatus(Enum):
     FILLED = 'FILLED'
     PARTIALLY_FILLED = 'PARTIALLY_FILLED'
     PENDING = 'PENDING'
+    REJECTED = 'REJECTED'
+
 
 class OrderType(Enum):
     MARKET = 'MARKET'
     LIMIT = 'LIMIT'
+    STOP_LOSS = 'STOP_LOSS'
+    STOP_PROFIT = 'STOP_PROFIT'
 
 class OrderSide(Enum):
     BUY = 'BUY'
     SELL = 'SELL'
+    SELL_SHORT = 'SELL_SHORT'
+    BUY_TO_COVER = 'BUY_TO_COVER '
 
 class Order:
     """
