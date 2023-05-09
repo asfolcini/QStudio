@@ -2,6 +2,7 @@
 # QStudio - ToM_Strategy.py
 # (c) Alberto Sfolcini <a.sfolcini@gmail.com>
 # www.surprisalx.com
+# https://www.quantifiedstrategies.com/turn-of-the-month-trading-strategy/
 #=======================================================================================================================
 
 from core.QBacktester import QBacktester
@@ -28,7 +29,7 @@ class ToM_Strategy(QBacktester):
         qty = 1000
         # luglio/agosto hanno ritorni stitisticamente negativi
         if self.filter:
-            filter_months = ['09']
+            filter_months = ['07','08']
         else:
             filter_months = []
 
