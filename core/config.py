@@ -29,3 +29,7 @@ OUTPUT_REPOSITORY="./output/"
 OUTPUT_FILENAME=datetime.now().strftime("%Y%m%dT%H%M%S")
 # MATHPLOT Style
 plt.style.use('fast')
+
+# Telegram channel instant messanger
+TELEGRAM_BOT_TOKEN = "6048507085:AAHPWlXXCmasC0r1oLo2OnsnAgyxNleeqpI"
+TELEGRAM_CHANNEL_ID = "-1001910945256"

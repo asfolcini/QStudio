@@ -63,3 +63,18 @@ class Position:
                 "PnL:"+str(self.pnl)+self._sep+
                 "status:"+str(self.status)
                 )
+
+    def toPrettyString(self):
+        _nl = "\n"
+        return (
+                "----------ID:"+self.id+"-----------"+_nl+
+                "Symbol       : "+self.symbol+_nl+
+                "Side         : "+str(self.side.name)+_nl+
+                "Open Date    : "+str(self.open_date)+_nl+
+                "Avg Price    : "+str(round(self.average_price,2))+_nl+
+                "Market Date  : "+str(self.market_date)+_nl+
+                "Market Price : "+str(round(self.market_price,2))+_nl+
+                "Quantity     : "+str(self.quantity)+_nl+
+                "PnL          : "+str(round(self.pnl,2))+_nl+
+                "Status       : "+str(self.status.name)
+                )

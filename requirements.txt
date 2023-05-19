@@ -13,3 +13,4 @@ kaleido
 pyfolio-reloaded
 prettytable
 names
+python-telegram-bot

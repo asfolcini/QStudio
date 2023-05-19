@@ -9,13 +9,17 @@ from datetime import datetime
 import pandas
 import numpy as np
 from matplotlib import pyplot as plt
+
+import core.config
 from core.Candle import Candle
 from core.Datahub import Datahub
 from core.Order import Order, OrderSide, OrderStatus, OrderType
 from core.Position import Position, PositionStatus, PositionSide
-
+from core.telegram_bot import Telegram_Message
 
 class QBacktester(object):
+
+    telegram_bot = Telegram_Message(core.config.TELEGRAM_BOT_TOKEN, core.config.TELEGRAM_CHANNEL_ID)
 
     def __init__(self, strategy_name, symbol):
         self.portfolio = []
@@ -24,6 +28,11 @@ class QBacktester(object):
         self.symbol = symbol
         self.stop_loss = -9999999
         self.atMarket = False
+        self.indicators = pandas.DataFrame()
+
+
+    def set_telegram_instant_message(self, active=False):
+        self.telegram_active = active;
 
     def set_verbose(self, verbose=False):
         """ Sets verbosity level on/off """
@@ -56,6 +65,12 @@ class QBacktester(object):
         self.onStart()
         for e in d.itertuples(index=True):
             event = Candle(self.symbol, e[1], e[2], e[3], e[4], e[5], e[6])
+
+            t = pandas.DataFrame()
+            t['date'] = [event.date]
+            t['close'] = [event.close]
+            self.indicators = pandas.concat([self.indicators, t])
+
             # Update Portfolio with current candle prices
             self.updatePortfolio(event)
             # Check if there are open orders to execute
@@ -187,12 +202,24 @@ class QBacktester(object):
 
 
 
-    def portfolio_show(self):
-        if self.verbose:
-            print(' . portfolio content')
-            p : Position
-            for p in list(self.portfolio):
+    def show_target_portfolio(self):
+        print(' . target portfolio content')
+        p : Position
+        for p in list(self.portfolio):
+            if p.status == PositionStatus.OPEN:
                 print(" . " + p.toString())
+
+    def get_target_portfolio(self):
+        """
+        Returns Dataframe for target portfolio
+        :return: target_portfolio (DataFrame)
+        """
+        tp = pandas.DataFrame()
+        p : Position
+        for p in list(self.portfolio):
+            if p.status == PositionStatus.OPEN:
+                tp.assign(p)
+        return tp
 
     def plot_equity(self):
         self.df.plot(x='open_date', y=['cumpnl','drawdown'], kind='line', color=['green','red'], title='Equity '+str(self.strategy_name))
@@ -215,7 +242,8 @@ class QBacktester(object):
     def plot_yield_by_yearsmonths(self):
         _df = self.get_yields_by_yearsmonths()
         _df.plot.bar(y=['pnl'], color='cornflowerblue')
-        print(_df.head(10))
+        for ym,pnl in _df.iterrows():
+            print("Year/Month : ",ym,"     PnL : {:.2f}".format(float(pnl)))
         plt.grid()
         plt.show()
 
@@ -226,11 +254,22 @@ class QBacktester(object):
         plt.show()
 
 
-    def get_historical_positions(self):
+    def show_historical_positions(self):
+        """
+        Prints Historical Positions
+        :return:
+        """
         p : Position
         for p  in self.portfolio:
             print(p.toString())
         pass
+
+    def get_historical_positions(self):
+        """
+        Gets Historical Positions
+        :return:
+        """
+        return self.portfolio
 
     def get_stats_report(self):
         print("--"*40)
@@ -279,3 +318,41 @@ class QBacktester(object):
         if self.verbose: print(". backtest finished.")
         self.onStop()
         pass
+
+
+    def build_target_portfolio_message(self, title=None):
+        sep = "--"*40
+        target_portfolio = self.get_target_portfolio()
+        text = sep + "\n"
+        if title != None:
+            text = text + title+"\n"
+        text = text + sep +"\n"
+
+        if target_portfolio.size == 0:
+            last_trade : Position;
+            last_trade = self.get_historical_positions().pop()
+            text = text + "All position have been closed, here is the last one:\n"
+            text = text + last_trade.toPrettyString()+"\n"
+        else:
+            p : Position
+            for p in target_portfolio:
+                text = text + p.toPrettyString()+"\n"
+
+        text = text + sep+"\n"
+        return text;
+
+
+    def send_telegram(self, message):
+        """
+        Use this function to send out telegram instant message!
+        In order to send out messages, you have to activate telegram active flag,
+        by default is false.
+        :param message:
+        :return:
+        """
+        if self.telegram_active:
+            self.telegram_bot.send_message(message);
+
+    def sma(self, data, n):
+        sma = data.rolling(window = n).mean()
+        return pandas.DataFrame(sma)

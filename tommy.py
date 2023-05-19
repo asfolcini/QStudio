@@ -1,34 +1,48 @@
 
-
-
 import pandas
 from core.strategy.ToM_Strategy import ToM_Strategy
 
-#symbol = "SPY"
+symbol = "SPY"
 #symbol = "SPHIX"
-symbol= "SP2D.DE"
+#symbol= "SP2D.DE"
+#symbol="SXR8.DE"  # iShare SP500
+#symbol="SXRV.DE" # iShare NSDQ
+#symbol="UEQD.DE"
+#symbol="0P00008VP7.F"
+#symbol="FFRHX"
+#symbol="0P0000VX30.F"
+#symbol="FNMIX"
+#symbol="SPHD"
+#symbol="IUSE.L"
+
+
+
 _strategy_name = "ToMMyLee ("+symbol+")"
+qty= 1000
 
 optimize = False
 if not optimize:
     s = ToM_Strategy(_strategy_name, symbol)
-    s.parameters(24, 4)
-    s.set_filter(True)
-    s.backtest_period("2000-01-20 00:00:00", "2023-01-10 00:00:00")
+    s.parameters(24, 4, qty)
+    s.set_filters(months_filter= False, sma_filter= False)
+    s.backtest_period("2000-01-20 00:00:00", "2023-12-10 00:00:00")
+    s.set_telegram_instant_message(True)
     s.set_verbose(False)
     s.run()
-    s.get_stats_report()
-    s.plot_equity()
-    s.plot_yield_by_years()
+    #s.get_stats_report()
+    #s.plot_equity()
+    #s.plot_yield_by_years()
     #s.plot_yield_by_yearsmonths()
+    #s.get_historical_positions()
 else:
     _data = []
     for entry_day in range(20, 30):
         for exit_day in range(1,6):
             s = ToM_Strategy(_strategy_name, symbol)
-            s.parameters(entry_day, exit_day)
-            s.set_filter(True)
+            s.parameters(entry_day, exit_day,qty)
+            s.set_filters(months_filter= False, sma_filter= False)
             s.backtest_period("2000-01-20 00:00:00", "2023-01-10 00:00:00")
+            s.set_telegram_instant_message(False) # Avoid to send out messages !!
             s.set_verbose(False)
             s.run()
 
