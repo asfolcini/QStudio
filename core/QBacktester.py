@@ -29,6 +29,7 @@ class QBacktester(object):
         self.stop_loss = -9999999
         self.atMarket = False
         self.indicators = pandas.DataFrame()
+        self.telegram_active = False
 
 
     def set_telegram_instant_message(self, active=False):
@@ -124,7 +125,7 @@ class QBacktester(object):
                     self.orders.append(order)
                     # create portfolio position
                     slippage = 0;
-                    p = Position(PositionSide.LONG, order.symbol, order.date, order.entry_price+slippage, order.quantity, event.close, event.date, pnl=0.0, status=PositionStatus.OPEN)
+                    p = Position(PositionSide.LONG, order.symbol, order.execution_date, order.entry_price+slippage, order.quantity, event.close, event.date, pnl=0.0, status=PositionStatus.OPEN)
                     self.portfolio.append(p)
                     self.atMarket = True
                     # call onExecution
@@ -139,7 +140,7 @@ class QBacktester(object):
                         self.orders.append(order)
                         # create portfolio position
                         slippage = 0;
-                        p = Position(PositionSide.LONG, order.symbol, order.date, order.entry_price+slippage, order.quantity, event.close, event.date, pnl=0.0, status=PositionStatus.OPEN)
+                        p = Position(PositionSide.LONG, order.symbol, order.execution_date, order.entry_price+slippage, order.quantity, event.close, event.date, pnl=0.0, status=PositionStatus.OPEN)
                         self.portfolio.append(p)
                         self.atMarket = True
                         self.onExecution(order)
@@ -214,12 +215,14 @@ class QBacktester(object):
         Returns Dataframe for target portfolio
         :return: target_portfolio (DataFrame)
         """
-        tp = pandas.DataFrame()
+        tp = []
         p : Position
         for p in list(self.portfolio):
             if p.status == PositionStatus.OPEN:
-                tp.assign(p)
+                tp.append(p)
+                #tp.assign(p)
         return tp
+
 
     def plot_equity(self):
         self.df.plot(x='open_date', y=['cumpnl','drawdown'], kind='line', color=['green','red'], title='Equity '+str(self.strategy_name))
@@ -322,13 +325,13 @@ class QBacktester(object):
 
     def build_target_portfolio_message(self, title=None):
         sep = "--"*40
+        signal_day = datetime.today().strftime('%Y-%m-%d')
         target_portfolio = self.get_target_portfolio()
-        text = sep + "\n"
         if title != None:
-            text = text + title+"\n"
+            text = signal_day +"  "+ title+"\n"
         text = text + sep +"\n"
 
-        if target_portfolio.size == 0:
+        if len(target_portfolio) == 0:
             last_trade : Position;
             last_trade = self.get_historical_positions().pop()
             text = text + "All position have been closed, here is the last one:\n"

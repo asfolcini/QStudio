@@ -36,7 +36,6 @@ class ToM_Strategy(QBacktester):
         qty = self.quantity
 
         self.indicators['sma200'] = self.indicators['close'].rolling(200).mean().fillna(0)
-        self.indicators['sma50'] = self.indicators['close'].rolling(50).mean().fillna(0)
 
         # luglio/agosto hanno ritorni stitisticamente negativi
         if self.filter:
@@ -49,11 +48,15 @@ class ToM_Strategy(QBacktester):
 
         if month not in filter_months:
             if day >= self.entry_day and not self.atMarket:
-                if event.close > self.indicators['sma200'].tolist().pop():
+                if self.sma_filter:
+                    if event.close > self.indicators['sma200'].tolist().pop():
+                        if self.verbose: print("BUY "+str(event.symbol)+" at market "+str(event.date)+" qty="+str(qty))
+                        self.atMarket = self.place_order(event, OrderType.MARKET, OrderSide.BUY, qty)
+                    else:
+                        if self.verbose: print("[",str(event.date),"]BUY filtered because C < sma200 [",str(event.close),"<",str(self.indicators['sma200'].tolist().pop()),"]")
+                else:
                     if self.verbose: print("BUY "+str(event.symbol)+" at market "+str(event.date)+" qty="+str(qty))
                     self.atMarket = self.place_order(event, OrderType.MARKET, OrderSide.BUY, qty)
-                else:
-                    if self.verbose: print("[",str(event.date),"]BUY filtered because C < sma200 [",str(event.close),"<",str(self.indicators['sma200'].tolist().pop()),"]")
 
             if day >= self.exit_day and day < self.exit_day+3 and self.atMarket:
                 if self.verbose: print("SELL "+str(event.symbol)+" at market "+str(event.date)+" qty="+str(qty))
@@ -64,8 +67,8 @@ class ToM_Strategy(QBacktester):
 
 
     def onStop(self):
-       mex = self.build_target_portfolio_message("TommyLee TARGET Portfolio")
-       print(mex)
+       mex = self.build_target_portfolio_message(self.strategy_name + " ")
+       if (self.verbose): print(mex)
        self.send_telegram(mex)
 
 
