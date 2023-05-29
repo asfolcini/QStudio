@@ -2,7 +2,7 @@
 import pandas
 import sys
 from enum import Enum
-from core.strategy.ToM_Strategy import ToM_Strategy
+import core.strategy.ToM_Strategy
 
 
 def main():
@@ -65,7 +65,7 @@ def show_usage():
 
 def run_backtest(symbol, qty=100, mode='BACKTEST', _sma_filter=False,verbose=False):
     _strategy_name = "ToMMyLee ("+symbol+")"
-    s = ToM_Strategy(_strategy_name, symbol)
+    s = core.strategy.ToM_Strategy.ToM_Strategy(_strategy_name, symbol)
     s.parameters(24, 4, qty)
     s.set_filters(months_filter=True, sma_filter=_sma_filter)
     s.backtest_period("2000-01-20 00:00:00", "2023-12-10 00:00:00")
@@ -86,7 +86,7 @@ def run_optimize(symbol,qty=100, verbose=False):
     for entry_day in range(20, 30):
         for exit_day in range(1,6):
             _strategy_name = "ToMMyLee ("+symbol+")"
-            s = ToM_Strategy(_strategy_name, symbol)
+            s = core.strategy.ToM_Strategy.ToM_Strategy(_strategy_name, symbol)
             s.parameters(entry_day, exit_day,qty)
             s.set_filters(months_filter= True, sma_filter= False)
             s.backtest_period("2000-01-20 00:00:00", "2023-01-10 00:00:00")
