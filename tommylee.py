@@ -1,3 +1,13 @@
+# ------------------------------------------------------------------------------------------------------------ #
+# ToMMyLee Strategy
+# Example of usage:
+#   - Under crond will post on telegram channel the portfolio target
+#       python3 tommylee.py --signal SPY5.DE 50 --sma-filter-off
+#   - Backtest the strategy with charts and stats
+#       python3 tommylee.py --backtest SPY5.DE 50 --sma-filter-off
+#   - Optimize the strategy
+#       python3 tommylee.py --optimize SPY5.DE 50 --sma-filter-off
+# ------------------------------------------------------------------------------------------------------------ #
 
 import pandas
 import sys
@@ -39,9 +49,9 @@ def main():
             symbol = args[1]
             qty = int(args[2])
             if args[3] == "--sma-filter-on":
-                run_backtest(symbol, qty, _sma_filter=True)
+                run_optimize(symbol, qty, _sma_filter=True)
             else:
-                run_backtest(symbol, qty, _sma_filter=False)
+                run_optimize(symbol, qty, _sma_filter=False)
             return
 
     show_usage();
@@ -81,14 +91,14 @@ def run_backtest(symbol, qty=100, mode='BACKTEST', _sma_filter=False,verbose=Fal
         #s.get_historical_positions()
 
 
-def run_optimize(symbol,qty=100, verbose=False):
+def run_optimize(symbol,qty=100, _sma_filter=False, verbose=False):
     _data = []
     for entry_day in range(20, 30):
         for exit_day in range(1,6):
             _strategy_name = "ToMMyLee ("+symbol+")"
             s = core.strategy.ToM_Strategy.ToM_Strategy(_strategy_name, symbol)
             s.parameters(entry_day, exit_day,qty)
-            s.set_filters(months_filter= True, sma_filter= False)
+            s.set_filters(months_filter= True, sma_filter= _sma_filter)
             s.backtest_period("2000-01-20 00:00:00", "2023-01-10 00:00:00")
             s.set_telegram_instant_message(False) # Avoid to send out messages !!
             s.set_verbose(verbose)

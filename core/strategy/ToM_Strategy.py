@@ -69,7 +69,6 @@ class ToM_Strategy(QBacktester):
     def onStop(self):
        mex = self.build_target_portfolio_message(self.strategy_name + " TARGET PORTFOLIO")
        #if (self.verbose):
-       print(mex)
        self.send_telegram(mex)
 
 
