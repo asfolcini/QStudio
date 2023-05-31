@@ -1,13 +1,13 @@
 
 import pandas
-from core.strategy.LunMer_Study import LunMer_Study
+from core.strategy.Bias_Study import Bias_Study
 
 symbol = "G.MI"
 
 optimize = False
 if not optimize:
-    s = LunMer_Study("LunMer_Study", symbol)
-    s.parameters(4, 2, 1)  # 4= venerdi quindi compera lunedi in chiusura e vendi mercoledi in chiusura
+    s = Bias_Study("LunMer_Study", symbol)
+    s.parameters(4, 2, 0)  # 4= venerdi quindi compera lunedi in chiusura e vendi mercoledi in chiusura
     s.set_filter(False)
     s.set_stop_loss(-500)
     s.backtest_period("2023-01-01 00:00:00", "2023-12-31 00:00:00")
@@ -23,7 +23,7 @@ else:
     for entry_day in range(0, 5):
         for day_count in range(0,5):
             for stopl in range(-1000,-100,50):
-                s = LunMer_Study("LunMer_Study", symbol)
+                s = Bias_Study("LunMer_Study", symbol)
                 s.parameters(entry_day, day_count)
                 s.set_stop_loss(stopl)
                 s.backtest_period("2010-01-01 00:00:00", "2019-12-31 00:00:00")

@@ -16,7 +16,7 @@ from core.QBacktester import QBacktester
 from core.Candle import Candle
 from core.Order import OrderType, OrderSide
 
-class LunMer_Study(QBacktester):
+class Bias_Study(QBacktester):
     """
     Campari Study Test   BIAS lun-merc positivo
     """
@@ -39,13 +39,12 @@ class LunMer_Study(QBacktester):
             e_1: float
             e_2: float
 
-            e : Candle
-            for e in list(events[-3:]):
-                print("**********   ", e.toString())
-            #e_0 = events[0:]
-            #e_1 = events[-1:0]
-            #e_2 = events[-2:-1]
-            #print(e_0,' * ', e_1, ' * ', e_2)
+            e : list(Candle)
+            e = list(events[-3:])
+            print("EVENT 1: ", e.pop(0).toString())
+            print("EVENT 2: ", e.pop(-1).toString())
+            #for e in list(events[-3:]):
+            #    print("**********   ", e.toString())
             #if e_0 > e_1 and e_1 > e_2:
             #    return True
 
