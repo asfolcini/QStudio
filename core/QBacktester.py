@@ -225,16 +225,20 @@ class QBacktester(object):
 
 
     def plot_equity(self):
-        self.df.plot(x='open_date', y=['cumpnl','drawdown'], kind='line', color=['green','red'], title='Equity '+str(self.strategy_name))
-        plt.grid()
-        plt.show()
+        if not self.df.empty:
+            self.df.plot(x='open_date', y=['cumpnl','drawdown'], kind='line', color=['green','red'], title='Equity '+str(self.strategy_name))
+            plt.grid()
+            plt.show()
 
 
     def get_yields_by_year(self):
-        _df = self.df
-        _df['year'] = _df['open_date'].dt.year
-        _df = _df[['year', 'pnl']].groupby(['year'], sort=False).sum().sort_index()
-        return _df
+        if not self.df.empty:
+            _df = self.df
+            _df['year'] = _df['open_date'].dt.year
+            _df = _df[['year', 'pnl']].groupby(['year'], sort=False).sum().sort_index()
+            return _df
+        else:
+            return pandas.DataFrame()
 
     def get_yields_by_yearsmonths(self):
         _df = self.df
@@ -251,10 +255,11 @@ class QBacktester(object):
         plt.show()
 
     def plot_yield_by_years(self):
-        _df = self.get_yields_by_year()
-        _df.plot.bar(y=['pnl'], color='cornflowerblue')
-        plt.grid()
-        plt.show()
+        if not self.df.empty:
+            _df = self.get_yields_by_year()
+            _df.plot.bar(y=['pnl'], color='cornflowerblue')
+            plt.grid()
+            plt.show()
 
 
     def show_historical_positions(self):
@@ -284,8 +289,10 @@ class QBacktester(object):
         print("Nr Trades          : ", self.tot_trades)
         print("Nr Positive Trades : ", self.tot_trades_pos)
         print("Nr Negative Trades : ", self.tot_trades_neg)
-        print("Profit Factor      : {:.2f}".format(self.tot_trades/self.tot_trades_neg))
-        print("Winning Rate       : {:.2f}".format((self.tot_trades_pos/self.tot_trades)*100), "%")
+        if self.tot_trades_neg>0:
+            print("Profit Factor      : {:.2f}".format(self.tot_trades/self.tot_trades_neg))
+        if self.tot_trades>0:
+            print("Winning Rate       : {:.2f}".format((self.tot_trades_pos/self.tot_trades)*100), "%")
         print("--"*40)
         print("Standard Deviation : {:.2f}".format(self.stddev))
         print("Max DrawDown       : {:.2f}".format(self.maxdd))
@@ -301,27 +308,38 @@ class QBacktester(object):
 
     def __stop(self):
         self.df = pandas.DataFrame(p.__dict__ for p in self.portfolio)
-        self.df['cumpnl'] = self.df['pnl'].cumsum().round(2)
+        if not self.df.empty:
+            self.df['cumpnl'] = self.df['pnl'].cumsum().round(2)
 
-        self.df['highvalue'] = self.df['cumpnl'].cummax()
-        self.df['drawdown'] = self.df['cumpnl'] - self.df['highvalue']
+            self.df['highvalue'] = self.df['cumpnl'].cummax()
+            self.df['drawdown'] = self.df['cumpnl'] - self.df['highvalue']
 
-        # STATS
-        self.tot_trades = self.df['pnl'].count()
-        self.tot_trades_neg = self.df['pnl'][self.df['pnl'] < 1.0 ].count()
-        self.tot_trades_pos = self.df['pnl'][self.df['pnl'] > 1.0 ].count()
-        self.pnl = self.df['pnl'].sum().round(2)
-        self.average_trade = self.df['pnl'].mean().round(2)
-        self.stddev = self.df['pnl'].std()
-        self.maxdd = self.df['drawdown'].min()
-        self.maxloss = self.df['pnl'].min()
-        self.maxwin = self.df['pnl'].max()
-        self.avgLoss = self.df['pnl'][self.df['pnl'] < 0.0 ].mean()
+            # STATS
+            self.tot_trades = self.df['pnl'].count()
+            self.tot_trades_neg = self.df['pnl'][self.df['pnl'] < 1.0 ].count()
+            self.tot_trades_pos = self.df['pnl'][self.df['pnl'] > 1.0 ].count()
+            self.pnl = self.df['pnl'].sum().round(2)
+            self.average_trade = self.df['pnl'].mean().round(2)
+            self.stddev = self.df['pnl'].std()
+            self.maxdd = self.df['drawdown'].min()
+            self.maxloss = self.df['pnl'].min()
+            self.maxwin = self.df['pnl'].max()
+            self.avgLoss = self.df['pnl'][self.df['pnl'] < 0.0 ].mean()
 
-        if self.verbose: print(". backtest finished.")
-        self.onStop()
+            if self.verbose: print(". backtest finished.")
+            self.onStop()
+        else:
+            self.tot_trades = 0
+            self.tot_trades_neg = 0
+            self.tot_trades_pos = 0
+            self.pnl = 0.0
+            self.average_trade = 0.0
+            self.stddev = 0.0
+            self.maxdd = 0.0
+            self.maxloss = 0.0
+            self.maxwin = 0.0
+            self.avgLoss = 0.0
         pass
-
 
     def build_target_portfolio_message(self, title=None):
         sep = "--"*40

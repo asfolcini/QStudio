@@ -2,15 +2,15 @@
 import pandas
 from core.strategy.LunMer_Study import LunMer_Study
 
-symbol = "STLA.MI"
+symbol = "G.MI"
 
 optimize = False
 if not optimize:
     s = LunMer_Study("LunMer_Study", symbol)
-    s.parameters(4, 2)
-    s.set_filter(True)
+    s.parameters(4, 2, 1)  # 4= venerdi quindi compera lunedi in chiusura e vendi mercoledi in chiusura
+    s.set_filter(False)
     s.set_stop_loss(-500)
-    s.backtest_period("2010-01-01 00:00:00", "2023-12-31 00:00:00")
+    s.backtest_period("2023-01-01 00:00:00", "2023-12-31 00:00:00")
     s.set_verbose(True)
     s.run()
     s.get_stats_report()
@@ -20,8 +20,8 @@ if not optimize:
     #s.get_historical_positions()
 else:
     _data = []
-    for entry_day in range(3, 5):
-        for day_count in range(1,6):
+    for entry_day in range(0, 5):
+        for day_count in range(0,5):
             for stopl in range(-1000,-100,50):
                 s = LunMer_Study("LunMer_Study", symbol)
                 s.parameters(entry_day, day_count)
@@ -38,7 +38,7 @@ else:
     opt = opt.sort_values(['avgtrade','pnl'], ascending=False)
     print("--"*40)
     print("OPTIMIZATION RESULTS")
-    print(opt.head(10))
+    print(opt.head(20))
 
 
 

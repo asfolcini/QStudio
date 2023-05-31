@@ -11,7 +11,6 @@
 
 import pandas
 import sys
-from enum import Enum
 import core.strategy.ToM_Strategy
 
 

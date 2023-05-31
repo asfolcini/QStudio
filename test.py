@@ -20,12 +20,23 @@ print(df['serie'].values)
 print("Getting last value from a serie")
 print(df['serie'].tolist().pop())
 
+print("Getting the last N values from a serie")
+e_0 = df['serie'].tolist()[0:]
+e_1 = df['serie'].tolist()[-1:]
+e_2 = df['serie'].tolist()[-2:]
+print(e_0)
+print(e_1)
+print(e_2)
+
+for e in df['serie'].tolist()[-3:]:
+    print(e)
+
 
 print("--"*60)
 print("TEST sfl_MAIA_bot passive message sender")
 from core.telegram_bot import Telegram_Message
-tm = Telegram_Message()
-tm.send_message('Messaggio di test')
+#tm = Telegram_Message()
+#tm.send_message('Messaggio di test')
 
 
 
