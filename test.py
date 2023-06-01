@@ -29,7 +29,7 @@ print(e_1)
 print(e_2)
 
 for e in df['serie'].tolist()[-3:]:
-    print(e)
+    print('event:', e)
 
 
 print("--"*60)

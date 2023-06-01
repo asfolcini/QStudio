@@ -67,10 +67,11 @@ class QBacktester(object):
         for e in d.itertuples(index=True):
             event = Candle(self.symbol, e[1], e[2], e[3], e[4], e[5], e[6])
 
-            t = pandas.DataFrame()
-            t['date'] = [event.date]
-            t['close'] = [event.close]
-            self.indicators = pandas.concat([self.indicators, t])
+            e = pandas.DataFrame()
+            e['date'] = [event.date]
+            e['close'] = [event.close]
+            e['events'] = [event]
+            self.indicators = pandas.concat([self.indicators, e])
 
             # Update Portfolio with current candle prices
             self.updatePortfolio(event)

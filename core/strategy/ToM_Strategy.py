@@ -4,7 +4,9 @@
 # www.surprisalx.com
 # https://www.quantifiedstrategies.com/turn-of-the-month-trading-strategy/
 #=======================================================================================================================
+import matplotlib.pyplot as plt
 import pandas
+import random
 
 from core.Position import Position
 from core.QBacktester import QBacktester
@@ -36,6 +38,7 @@ class ToM_Strategy(QBacktester):
         qty = self.quantity
 
         self.indicators['sma200'] = self.indicators['close'].rolling(200).mean().fillna(0)
+
 
         # luglio/agosto hanno ritorni stitisticamente negativi
         if self.filter:
