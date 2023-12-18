@@ -78,3 +78,9 @@ class Position:
                 "PnL          : "+str(round(self.pnl,2))+_nl+
                 "Status       : "+str(self.status.name)
                 )
+
+    def toPrettyString_inline(self):
+        return(
+                "Status: "+str(self.status.name)+" OpenDate: "+str(self.open_date)+" Qty: "+str(self.quantity)+" Symbol: "+self.symbol+" side: "+str(self.side.name)+" avgPrice: "+str(round(self.average_price,2))
+                +" MarketDate: "+str(self.market_date)+" MarketPrice: "+str(round(self.market_price,2))+" PnL: "+str(round(self.pnl,2))
+        )

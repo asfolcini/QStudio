@@ -106,7 +106,11 @@ def filter_pattern(events, pattern_nr):
             if (co1/co0)<0.4:
                 return True
 
-
+    if pattern_nr == 9:
+        c = get_last_values(events, 5)
+        if len(c)>4:
+            if c[0].low > c[4].low:
+                return True;
 
     # by default return False
     return False

@@ -1,38 +1,109 @@
+# ------------------------------------------------------------------------------------------------------------ #
+# Bias_Study Strategy
+# Example of usage:
+#   - Under crond will post on telegram channel the portfolio target
+#       python3 bias_study.py --signal SPY5.DE 50 --sma-filter-off
+#   - Backtest the strategy with charts and stats
+#       python3 bias_study.py --backtest SPY5.DE 50 --sma-filter-off
+#   - Optimize the strategy
+#       python3 bias_study.py --optimize SPY5.DE 50 --sma-filter-off
+# ------------------------------------------------------------------------------------------------------------ #
 
 import pandas
 from core.strategy.Bias_Study import Bias_Study
+import sys
 
-symbol = "G.MI"
 
-optimize = False
-if not optimize:
+def main():
+    """
+    MAIN
+    """
+    args = sys.argv[1:]
+
+    """
+    STARTER
+    """
+    if len(args) == 4 and args[0] == '--backtest' and args[3]!='':
+        if args[1] != '':
+            symbol = args[1]
+            qty = int(args[2])
+            if args[3] == "--sma-filter-on":
+                run_backtest(symbol, qty, _sma_filter=True)
+            else:
+                run_backtest(symbol, qty, _sma_filter=False)
+            return
+
+    if len(args) == 4 and args[0] == '--signal' and args[3]!='':
+        if args[1] != '':
+            symbol = args[1]
+            qty = int(args[2])
+            if args[3] == "--sma-filter-on":
+                run_backtest(symbol, qty, _sma_filter=True, mode='SIGNAL')
+            else:
+                run_backtest(symbol, qty, _sma_filter=False, mode='SIGNAL')
+            return
+
+    if len(args) == 3 and args[0] == '--optimize' and args[2]!='':
+        if args[1] != '':
+            symbol = args[1]
+            qty = int(args[2])
+            run_optimize(symbol, qty)
+            return
+
+    show_usage();
+
+def show_usage():
+    print("--"*60)
+    print("QStudio - Bias Study v1.0 <a.sfolcini@gmail.com>")
+    print("--"*60)
+    print(" USAGE:")
+    print("   python3 bias_study.py [--backtest/--optimize/--signal] [symbol] [quantity] [--sma-filter-on/--sma-filter-off]")
+    print(" Examples:")
+    print("   - BACKTEST: Backtest the strategy with the given symbol and quantity, filtering by sma200")
+    print("         python3 bias_study.py --backtest SPY 100 --sma-filter-on")
+    print("   - OPTIMIZE:Optimize the strategy with the given symbol and quantity")
+    print("         python3 bias_study.py --optimize SPY 100")
+    print("   - SIGNAL: Running the strategy, publishing Target Portfolio on telegramìs channel, filtering by sma200")
+    print("         python3 bias_study.py --signal SPY 100 --sma-filter-off")
+    print("")
+
+
+
+def run_backtest(symbol, qty=100, mode='BACKTEST', _sma_filter=False,verbose=False):
     s = Bias_Study("Bias_Study ("+str(symbol)+")", symbol)
-    #s.parameters(4, 2, 0)  # 4= venerdi quindi compera lunedi in chiusura e vendi mercoledi in chiusura
-    s.parameters(4,2,5)
-    s.set_filters(sma_filter=True)
-    s.set_stop_loss(-5000)
-    s.backtest_period("2000-01-01 00:00:00", "2023-12-31 00:00:00")
-    s.set_verbose(False)
+    # 4= venerdi quindi compera lunedi in chiusura e vendi mercoledi in chiusura
+    s.parameters(4,2,5, qty) # G.MI
+    #s.parameters(2,4,7,qty)
+    s.set_filters(sma_filter=_sma_filter)
+    s.set_stop_loss(-500)
+    s.backtest_period("2000<<1  -07-01 00:00:00", "2023-12-31 00:00:00")
+    if mode == 'SIGNAL':
+        s.set_telegram_instant_message(True)
+    s.set_verbose(verbose)
     s.run()
-    s.get_stats_report()
-    s.plot_equity()
-    s.plot_yield_by_years()
-    #s.plot_yield_by_yearsmonths()
-    #s.get_historical_positions()
-else:
+    if mode == 'BACKTEST':
+        s.get_stats_report()
+        s.plot_equity()
+        s.plot_yield_by_years()
+        s.show_historical_positions(10)
+
+
+
+
+def run_optimize(symbol, qty=100, verbose=False):
     _data = []
-    for entry_day in range(4, 5):
-        for day_count in range(2,3):
-            for pattern in range(0,8):
+    for entry_day in range(3, 5):
+        for day_count in range(1,3):
+            for pattern in range(0,9):
                 for fil in range(0, 2):
                     s = Bias_Study("Bias_Study", symbol)
-                    s.parameters(entry_day, day_count, pattern_nr=pattern)
+                    s.parameters(entry_day, day_count, pattern_nr=pattern, qty=qty)
                     if fil==0:
                         s.set_filters(False)
                     else:
                         s.set_filters(True)
-                    s.set_stop_loss(-500)
-                    s.backtest_period("2010-01-01 00:00:00", "2019-12-31 00:00:00")
+                    #s.set_stop_loss(-500)
+                    s.backtest_period("2000-01-01 00:00:00", "2019-12-31 00:00:00")
                     s.set_verbose(False)
                     s.run()
 
@@ -49,4 +120,7 @@ else:
 
 
 
+# -----------------------------------------------------------------------------------------------------------------------
+if __name__ == '__main__':
+    main()
 

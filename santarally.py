@@ -1,17 +1,17 @@
 # ------------------------------------------------------------------------------------------------------------ #
-# ToMMyLee Strategy
+# Santa Rally Strategy
 # Example of usage:
 #   - Under crond will post on telegram channel the portfolio target
-#       python3 tommylee.py --signal SPY5.DE 50 --sma-filter-off
+#       python3 santarally.py --signal EWG 50 --sma-filter-off
 #   - Backtest the strategy with charts and stats
-#       python3 tommylee.py --backtest SPY5.DE 50 --sma-filter-off
+#       python3 santarally.py --backtest EWG 50 --sma-filter-off
 #   - Optimize the strategy
-#       python3 tommylee.py --optimize SPY5.DE 50 --sma-filter-off
+#       python3 santarally.py --optimize EWG 50 --sma-filter-off
 # ------------------------------------------------------------------------------------------------------------ #
 
 import pandas
 import sys
-import core.strategy.ToM_Strategy
+import core.strategy.Santa_Strategy
 
 
 def main():
@@ -19,6 +19,7 @@ def main():
     MAIN
     """
     args = sys.argv[1:]
+
 
     """
     STARTER
@@ -59,24 +60,24 @@ def main():
 
 def show_usage():
     print("--"*60)
-    print(" ToMMyLee Strategy v1.0 <a.sfolcini@gmail.com>")
+    print(" SantaRally Strategy v1.0 <a.sfolcini@gmail.com>")
     print("--"*60)
     print(" USAGE:")
-    print("   python3 tommylee.py [--backtest/--optimize/--signal] [symbol] [quantity] [--sma-filter-on/--sma-filter-off]")
+    print("   python3 santarally.py [--backtest/--optimize/--signal] [symbol] [quantity] [--sma-filter-on/--sma-filter-off]")
     print(" Examples:")
     print("   - BACKTEST: Backtest the strategy with the given symbol and quantity, filtering by sma200")
-    print("         python3 tommylee.py --backtest SPY 100 --sma-filter-on")
+    print("         python3 santarally.py --backtest EWG 1000 --sma-filter-on")
     print("   - OPTIMIZE:Optimize the strategy with the given symbol and quantity, filtering by sma200")
-    print("         python3 tommylee.py --optimize SPY 100 --sma-filter-on")
+    print("         python3 santarally.py --optimize EWG 1000 --sma-filter-on")
     print("   - SIGNAL: Running the strategy, publishing Target Portfolio on telegramìs channel, filtering by sma200")
-    print("         python3 tommylee.py --signal SPY 100 --sma-filter-off")
+    print("         python3 santarally.py --signal EWG 1000 --sma-filter-off")
     print("")
 
 def run_backtest(symbol, qty=100, mode='BACKTEST', _sma_filter=False,verbose=False):
-    _strategy_name = "ToMMyLee ("+symbol+")"
-    s = core.strategy.ToM_Strategy.ToM_Strategy(_strategy_name, symbol)
-    s.parameters(24, 4, qty)
-    s.set_filters(months_filter=True, sma_filter=_sma_filter)
+    _strategy_name = "SantaRally ("+symbol+")"
+    s = core.strategy.Santa_Strategy.Santa_Strategy(_strategy_name, symbol)
+    s.parameters(14, 4, qty)
+    s.set_filters(sma_filter=_sma_filter)
     s.backtest_period("2000-01-20 00:00:00", "2023-12-10 00:00:00")
     if mode == 'SIGNAL':
         s.set_telegram_instant_message(True)
@@ -92,12 +93,12 @@ def run_backtest(symbol, qty=100, mode='BACKTEST', _sma_filter=False,verbose=Fal
 
 def run_optimize(symbol,qty=100, _sma_filter=False, verbose=False):
     _data = []
-    for entry_day in range(20, 30):
+    for entry_day in range(10, 30):
         for exit_day in range(1,6):
-            _strategy_name = "ToMMyLee ("+symbol+")"
-            s = core.strategy.ToM_Strategy.ToM_Strategy(_strategy_name, symbol)
+            _strategy_name = "SantaRally ("+symbol+")"
+            s = core.strategy.Santa_Strategy.Santa_Strategy(_strategy_name, symbol)
             s.parameters(entry_day, exit_day,qty)
-            s.set_filters(months_filter= True, sma_filter= _sma_filter)
+            s.set_filters(sma_filter= _sma_filter)
             s.backtest_period("2000-01-20 00:00:00", "2023-01-10 00:00:00")
             s.set_telegram_instant_message(False) # Avoid to send out messages !!
             s.set_verbose(verbose)

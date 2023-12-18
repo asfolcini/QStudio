@@ -196,12 +196,17 @@ class QBacktester(object):
         pass
 
     def onStop(self):
+        if self.telegram_active: self.publish_target_portfolio()
         pass
 
     def onExecution(self, order : Order):
         if self.verbose: print(". order execued: "+str(order.toString()))
         pass
 
+
+    def publish_target_portfolio(self):
+        mex = self.build_target_portfolio_message(self.strategy_name + " TARGET PORTFOLIO")
+        self.send_telegram(mex)
 
 
     def show_target_portfolio(self):
@@ -263,14 +268,16 @@ class QBacktester(object):
             plt.show()
 
 
-    def show_historical_positions(self):
+    def show_historical_positions(self, last_position_nr=999999):
         """
         Prints Historical Positions
         :return:
         """
         p : Position
+        i = 1
         for p  in self.portfolio:
-            print(p.toString())
+            if last_position_nr > len(self.portfolio) - i: print(p.toPrettyString_inline())
+            i = i+1
         pass
 
     def get_historical_positions(self):

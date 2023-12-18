@@ -20,4 +20,6 @@ Downloads historical EOD stock data from YAHOO
 ### Backtester
 + Empty_Strategy
 + ToM_Strategy
++ Bias_Study
++ Santa Rally
 
