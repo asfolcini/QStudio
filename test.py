@@ -1,4 +1,5 @@
 import pandas as pd
+import datetime as dt
 
 df = pd.DataFrame()
 
@@ -37,6 +38,3 @@ print("TEST sfl_MAIA_bot passive message sender")
 from core.telegram_bot import Telegram_Message
 #tm = Telegram_Message()
 #tm.send_message('Messaggio di test')
-
-
-

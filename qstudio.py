@@ -195,12 +195,24 @@ def check_single_strategy(equity_filepath="./equities/", report=False):
     cs.check_single_strategy(equity_filepath, equity_filepath, report)
     return
 
+def open_onlinedoc():
+    print("Redirect to "+cfg.ONLINE_DOCS_URL)
+    webbrowser.open(cfg.ONLINE_DOCS_URL)
+    return
+
 
 def main():
     """
     MAIN
     """
     args = sys.argv[1:]
+
+    """
+    ONLINE DOCUMENTATION
+    """
+    if len(args) == 1 and args[0] == '--documentation':
+        open_onlinedoc()
+        return
 
     """
     DATA HUB
@@ -528,6 +540,7 @@ def usage():
     print(" USAGE")
     # USAGE
     print(" --help                      : usage instructions")
+    print(" --documentation             : open online documentation")
 
 def header():
     """

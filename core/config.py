@@ -7,13 +7,16 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 
 # QStudio version
-VERSION = "v0.3.0"
+VERSION = "v0.3.4"
 
 # Author
 AUTHOR="Alberto Sfolcini <a.sfolcini@gmail.com>"
 
 # If true this will prints all the outputs.
 VERBOSE=False
+
+# Online QStudio Docuemntation
+ONLINE_DOCS_URL="https://surprisalx.com/QStudio.html"
 
 # Check strategy url
 CHECK_STRATEGY_HELP_URL="https://surprisalx.com/check_strategy.html"

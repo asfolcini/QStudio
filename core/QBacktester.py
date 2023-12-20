@@ -46,8 +46,17 @@ class QBacktester(object):
         pass
 
     def backtest_period(self, backtest_start=None, backtest_end=None):
+        '''
+        If backtest_end date is not specified uses today date
+        :param backtest_start:
+        :param backtest_end:
+        :return:
+        '''
         self.backtest_start = backtest_start
-        self.backtest_end = backtest_end
+        if backtest_end==None:
+            self.backtest_end = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+        else:
+            self.backtest_end = backtest_end
 
     def run(self):
         if self.verbose:

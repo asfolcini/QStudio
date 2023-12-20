@@ -98,7 +98,8 @@ class Datahub:
             ds.reset_index(inplace=True)
             ds['Date'] = ds['Date'].dt.strftime('%Y-%m-%d')
             ds.to_csv(fp, index=False)
-            return True
+            out = ds['Date'].tail(1)
+            return True, out.values
         except:
             return False
 
@@ -108,9 +109,11 @@ class Datahub:
         UPDATE DATA FROM YAHOO FINANCE for the whole symbol list
         """
         for symbol in self.get_symbols():
-            if cfg.VERBOSE: print("Updating "+str(symbol)+"...", end='')
-            if self.download_data(symbol):
-                print("done.")
+            print("Updating historical data for ticker "+str(symbol)+"...", end='')
+
+            res, data = self.download_data(symbol)
+            if res:
+                print("done {}".format(data))
             else:
                 print("FAILED!")
 

@@ -77,7 +77,7 @@ def run_backtest(symbol, qty=100, mode='BACKTEST', _sma_filter=False,verbose=Fal
     s = core.strategy.ToM_Strategy.ToM_Strategy(_strategy_name, symbol)
     s.parameters(24, 4, qty)
     s.set_filters(months_filter=True, sma_filter=_sma_filter)
-    s.backtest_period("2000-01-20 00:00:00", "2023-12-10 00:00:00")
+    s.backtest_period("2000-01-20 00:00:00")
     if mode == 'SIGNAL':
         s.set_telegram_instant_message(True)
     s.set_verbose(verbose)
@@ -98,7 +98,7 @@ def run_optimize(symbol,qty=100, _sma_filter=False, verbose=False):
             s = core.strategy.ToM_Strategy.ToM_Strategy(_strategy_name, symbol)
             s.parameters(entry_day, exit_day,qty)
             s.set_filters(months_filter= True, sma_filter= _sma_filter)
-            s.backtest_period("2000-01-20 00:00:00", "2023-01-10 00:00:00")
+            s.backtest_period("2000-01-20 00:00:00")
             s.set_telegram_instant_message(False) # Avoid to send out messages !!
             s.set_verbose(verbose)
             s.run()
