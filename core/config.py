@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 
 # QStudio version
-VERSION = "v0.3.4"
+VERSION = "v0.3.5"
 
 # Author
 AUTHOR="Alberto Sfolcini <a.sfolcini@gmail.com>"

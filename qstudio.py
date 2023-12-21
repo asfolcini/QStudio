@@ -13,6 +13,7 @@ from core.yields.Yields import Yields
 from core.charts.Charts import Charts
 from core.random_equity import random_equity as random_eq
 from core.check_strategy import check_strategy as cs
+from core.hurst.hurst_exponent import Hurst_Exponent as Hurst_Exponent
 import names
 import webbrowser
 
@@ -200,6 +201,14 @@ def open_onlinedoc():
     webbrowser.open(cfg.ONLINE_DOCS_URL)
     return
 
+def detect_trend(_symbols):
+    header()
+    s = Datahub(loadfromconfig=True)
+    s.set_symbols(_symbols)
+    he = Hurst_Exponent(s)
+    #he.set_margin_percentage(0.1)
+    he.calc()
+    return
 
 def main():
     """
@@ -447,6 +456,14 @@ def main():
             check_single_strategy(args[2], report=True)
             return
 
+    """
+    DETECT_TREND
+    """
+    if len(args) == 3 and args[0] == '--detect_trend':
+        if args[1] == '--symbols' and args[2] != '':
+            detect_trend(args[2])
+            return
+
 
     usage()
 
@@ -536,6 +553,12 @@ def usage():
     print(" --check_strategy --folder [folder] --report      : run the check strategy and produce a report")
     print(" --check_single_strategy --file [folder]          : run the check strategy, no charts")
     print(" --check_single_strategy --file [folder] --report : run the check strategy and produce a report")
+
+    # HURST EXPONENT
+    print(" DETECT TREND")
+    print(" --detect_trend --symbols [symbols]            : detect if the symbol(s) is mean-reverting, trending or random")
+
+
 
     print(" USAGE")
     # USAGE
