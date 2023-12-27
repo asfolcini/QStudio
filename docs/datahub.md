@@ -1,0 +1,105 @@
+# QStudio - Data Hub
+
+[Home](index.md)
+
+Serving as a centralized repository for financial data, QStudio's Datahub relies on Yahoo Daily as its primary data source. This feature empowers users to effortlessly manage and update financial information, ensuring a streamlined process for accessing and maintaining pertinent market data. Notably, the Datahub facilitates seamless updates from Yahoo Finance, enabling users to stay up-to-date with the latest market information. In essence, QStudio's Datahub stands as a pivotal tool, playing a crucial role in organizing and accessing financial data. Its functionality significantly optimizes the analytical workflow within the application, enhancing the overall user experience.
+
+## Datahub Configuration
+To ensure the Datahub is properly configured, use the following commands:
+
+```bash
+python qstudio.py --datahub --show
+```
+output:
+~~~textmate
+------------------------------------------------------------------------------------------------------------------------
+Q S t u d i o   v0.3.5
+2023 (c) Alberto Sfolcini <a.sfolcini@gmail.com>
+www.surprisalx.com
+------------------------------------------------------------------------------------------------------------------------
+DATAHUB Repository
+- LDO.MI.csv
+- SXRT.DE.csv
+- SPY5.DE.csv
+- CPR.MI.csv
+- BGN.MI.csv
+- BAMI.MI.csv
+- FTSEMIB.MI.csv
+- XSX6.DE.csv
+- ^GDAXI.csv
+- CSSPX.MI.csv
+- IVG.MI.csv
+- GOLD.csv
+- XESC.DE.csv
+- 0P00008VP7.F.csv
+- SP2D.DE.csv
+- VUSA.DE.csv
+- SXRV.DE.csv
+- EUE.MI.csv
+- AZM.MI.csv
+- XNIF.MI.csv
+- IUSM.DE.csv
+~~~
+
+
+## Datahub Usage
+The Datahub simplifies managing and updating financial information within QStudio. Its key features include:
+
+1. Centralized Data Storage:
+   - The Datahub stores financial data in a central location (**./data/**).
+   - Keeps data organized and easily accessible.
+   
+2. Update from Yahoo Finance:
+   - Users can update financial data for all symbols configured or specific ones from Yahoo Finance.
+   - Ensures data is current and reflects the latest market information.
+   
+## Example Usage
+
+- Update all symbols: 
+```pythonregexp
+python qstudio.py --datahub --update-all
+```
+
+- Update specific symbols: 
+```pythonregexp
+python qstudio.py --datahub --update AAPL,GOOGL
+```
+
+
+## Keep your DataHub up-to-date
+QStudio relies on Yahoo Finance as the primary data source for the Datahub.
+Regularly updating data using the ```--update-all``` command is recommended to maintain accurate market information.
+
+## Datahub Update with Cron
+To keep QStudio's financial data up-to-date using cron, you can set up a cron job that periodically runs the command to update the datahub. Here's a step-by-step guide:
+
+1. **Edit Crontab**
+   Open your crontab configuration using the following command:
+
+```bash
+crontab -e
+```
+
+2. **Schedule the Cron Job**
+   Add a line to schedule the cron job. For example, to update the datahub every day at 2:00 AM, add the following line:
+
+```bash
+0 2 * * * /path/to/QStudio --datahub --update-all >> /path/to/update_log.txt 2>&1
+```
+Adjust the paths according to your QStudio installation directory and the location where you want to store the update log.
+
+The cron schedule format is as follows:
+
+```renderscript
+minute (0 - 59) hour (0 - 23) day of month (1 - 31) month (1 - 12) day of week (0 - 6) (Sunday to Saturday)
+```
+
+3. **Save and Exit**
+   Save your changes and exit the editor.
+
+Now, the cron job will run daily at the specified time, updating the datahub and logging the output. Make sure to monitor the log file for any potential issues.
+
+Note: The actual cron setup might vary based on your system and user privileges. Adjust the paths and timing according to your requirements.
+
+
+[Top](#qstudio---data-hub)

@@ -123,15 +123,16 @@ def yields_monthly(_symbols, show=True, periods=9999, overlay=False):
     ys = Yields(s, show,overlay=overlay)
     ys.generate_month(periods)
 
-def volatility(_symbols):
+def volatility(_symbols, periods=999999999):
     """
     VOLATILITY
     """
     header()
     s = Datahub(loadfromconfig=True)
-    s.set_symbols(_symbols)
+    if _symbols != None:
+        s.set_symbols(_symbols)
     ys = Yields(s, False, overlay=False)
-    ys.get_volatility()
+    ys.get_volatility(periods)
 
 def autocorrelation(_symbols, show=True):
     """
@@ -201,10 +202,11 @@ def open_onlinedoc():
     webbrowser.open(cfg.ONLINE_DOCS_URL)
     return
 
-def detect_trend(_symbols):
+def detect_market_behavior(_symbols):
     header()
     s = Datahub(loadfromconfig=True)
-    s.set_symbols(_symbols)
+    if _symbols != None:
+        s.set_symbols(_symbols)
     he = Hurst_Exponent(s)
     #he.set_margin_percentage(0.1)
     he.calc()
@@ -363,10 +365,26 @@ def main():
     """
        VOLATILITY
     """
+    if len(args) == 1 and args[0] == '--volatility':
+        volatility(None)
+        return
+    if len(args) == 3 and args[0] == '--volatility':
+        if args[1] == '--periods' and args[2] != '':
+            volatility(None, int(args[2]))
+            return
     if len(args) == 3 and args[0] == '--volatility':
         if args[1] == '--symbols' and args[2] != '':
             volatility(args[2])
             return
+    if len(args) == 5 and args[0] == '--volatility':
+        if args[1] == '--symbols' and args[2] != '' and args[3]=='--periods' and args[4] != '':
+            volatility(args[2],int(args[4]))
+            return
+
+
+
+
+
     """
        AUTOCORRELATION
     """
@@ -457,12 +475,16 @@ def main():
             return
 
     """
-    DETECT_TREND
+    DETECT_MARKET_BEHAVIOR
     """
-    if len(args) == 3 and args[0] == '--detect_trend':
+    if len(args) == 1 and args[0] == '--detect_market_behavior':
+        detect_market_behavior(None)
+        return
+    if len(args) == 3 and args[0] == '--detect_market_behavior':
         if args[1] == '--symbols' and args[2] != '':
-            detect_trend(args[2])
+            detect_market_behavior(args[2])
             return
+
 
 
     usage()
@@ -519,7 +541,10 @@ def usage():
 
     # VOLATILITY WEEKLY
     print(" VOLATILITY")
-    print(" --volatility --symbols [symbols] --periods       : find volatility for a given periods")
+    print(" --volatility                                         : calc volatility for configured symbols with max periods")
+    print(" --volatility --periods [periods]                     : calc volatility for configured symbols with given periods")
+    print(" --volatility --symbols [symbols]                     : calc volatility for given symbols")
+    print(" --volatility --symbols [symbols] --periods [periods] : calc volatility for given symbols and periods")
 
     # AUTOCORRELATION
     print(" AUTOCORRELATION")
@@ -541,6 +566,11 @@ def usage():
     print(" --chart --symbols [symbols] --periods [periods]         : show candlestick chart of given symbols, for given periods")
     print(" --chart --symbols [symbols] --periods [periods] --save  : save candlestick chart of given symbols, for given periods")
 
+    print(" --chart_candles --symbols [symbols]                             : show candlestick chart of given symbols")
+    print(" --chart_candles --symbols [symbols] --save                      : save candlestick chart of given symbols")
+    print(" --chart_candles --symbols [symbols] --periods [periods]         : show candlestick chart of given symbols, for given periods")
+    print(" --chart_candles --symbols [symbols] --periods [periods] --save  : save candlestick chart of given symbols, for given periods")
+
     # RANDOM EQUITY
     print(" RANDOM EQUITIES")
     print(" --random_equity --folder [folder] [Nr]  : generate a number of random equities in the given folder")
@@ -555,8 +585,9 @@ def usage():
     print(" --check_single_strategy --file [folder] --report : run the check strategy and produce a report")
 
     # HURST EXPONENT
-    print(" DETECT TREND")
-    print(" --detect_trend --symbols [symbols]            : detect if the symbol(s) is mean-reverting, trending or random")
+    print(" DETECT MARKET BEHAVIOR")
+    print(" --detect_market_behavior                                : detect market behavior for all configured symbols")
+    print(" --detect_market_behavior --symbols [symbols]            : detect market behavior for given symbols")
 
 
 
@@ -570,7 +601,8 @@ def header():
     HEADER
     """
     print("-" * 120)
-    print(" Q S t u d i o  " + str(cfg.VERSION))
+    print(" Q S t u d i o   " + str(cfg.VERSION))
+
     print(" " + datetime.date.today().strftime("%Y") + " (c) "+str(cfg.AUTHOR))
     print(" www.surprisalx.com")
     print("-" * 120)

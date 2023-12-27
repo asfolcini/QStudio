@@ -71,19 +71,20 @@ class Yields:
             plt.savefig(cfg.OUTPUT_REPOSITORY+"Yields_"+cfg.OUTPUT_FILENAME)
 
 
-    def get_volatility(self):
+    def get_volatility(self, periods=999999999):
         """
         COMPUTE VOLATILITY
         """
+        print("VOLATILITY REPORT (Periods =", str(periods), ")")
         for s in self.s.get_symbols():
-            r = self.s.load_data(s)
+            r = self.s.load_data(s, periods)
             r['Symbol'] = s
             r['Returns'] = ((r['Close']/r['Close'].shift(1)) -1)*100
             r.dropna(inplace = True)
             daily = r['Returns'].std()
             monthly = math.sqrt(21) * r['Returns'].std()
             annually = math.sqrt(252) * r['Returns'].std()
-            print(str(s)+' Volatility: Daily = {:.2f}%'.format(daily),' Monthly = {:.2f}%'.format(monthly),' Annually = {:.2f}%'.format(annually))
+            print(str(s)+' Daily = {:.2f}%'.format(daily), ' Monthly = {:.2f}%'.format(monthly), ' Annually = {:.2f}%'.format(annually))
 
     def get_yields(self,_symbol):
         r = self.s.load_data(_symbol)
