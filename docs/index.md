@@ -22,7 +22,7 @@ The tool allows users to explore, analyze, and identify potential anomalies usin
 - **Yields Visualization:** Visualize yields (daily, weekly, monthly).
 - **[Volatility Measurement](volatility.md):** Measure volatility for specified periods.
 - **Autocorrelation:** Measure AR(x).
-- **Detect Trend:** Identifies the nature of a specific financial symbol, indicating whether its price behavior is characterized by mean-reverting, trending, or random movements.
+- **[Detect Market Behavior](detect_market_behavior.md):** Identifies the nature of a specific financial symbol, indicating whether its price behavior is characterized by mean-reverting, trending, or random movements.
 - **Backtester:** Test algorithmic strategies in a virtual environment.
 - **[Datahub Integration](datahub.md):** Manage financial data with ease using the integrated Datahub.
 - **Charting:** Produce basic charts (line or candles)

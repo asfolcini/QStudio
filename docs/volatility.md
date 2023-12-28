@@ -25,38 +25,88 @@ The volatility analysis is a crucial feature that allows users to assess and mea
 5. **Visualization and Reporting:**
     - QStudio's features include visualizing volatility through charts and providing reports, allowing users to comprehend and communicate the volatility characteristics of different symbols.
 
+## Usage
 
-### Example Usage:
+Calculate volatility for configured symbols or specific symbols and periods. Below are the usage options for the volatility feature:
 
-To assess the volatility of configured symbols for the last 30 days and generate a volatility chart, users can use the following command:
+1. **Calculate Volatility for Configured Symbols with Max Periods:**
+   ```textmate
+   python qstudio.py --volatility
+   ```
 
-```bash
-python qstudio.py --volatility
-```
-This command will provide insights into the volatility of the specified symbols over the defined period, helping users make informed decisions.
+2. **Calculate Volatility for Configured Symbols with Given Periods:**
+   ```textmate
+   python qstudio.py --volatility --periods [periods]
+   ```
+   Example:
+   ```pythonregexp
+   python qstudio.py --volatility --periods 90
+   ```
+   output:
+   ~~~textmate
+   ------------------------------------------------------------------------------------------------------------------------
+    Q S t u d i o   v0.3.5
+    2023 (c) Alberto Sfolcini <a.sfolcini@gmail.com>
+    www.surprisalx.com
+   ------------------------------------------------------------------------------------------------------------------------
+   VOLATILITY REPORT (Periods = 90 )
+   FTSEMIB.MI Daily = 0.81%  Monthly = 3.72%  Annually = 12.90%
+   ^GDAXI Daily = 0.70%  Monthly = 3.19%  Annually = 11.05%
+   ENI.MI Daily = 1.05%  Monthly = 4.83%  Annually = 16.74%
+   RACE.MI Daily = 1.37%  Monthly = 6.29%  Annually = 21.80%
+   CPR.MI Daily = 1.59%  Monthly = 7.31%  Annually = 25.32%
+   PST.MI Daily = 0.99%  Monthly = 4.54%  Annually = 15.72%
+   G.MI Daily = 0.82%  Monthly = 3.77%  Annually = 13.06%
+   BAMI.MI Daily = 1.60%  Monthly = 7.33%  Annually = 25.41%
+   AZM.MI Daily = 1.01%  Monthly = 4.65%  Annually = 16.09%
+   LDO.MI Daily = 1.54%  Monthly = 7.07%  Annually = 24.51%
+   STLAM.MI Daily = 1.52%  Monthly = 6.97%  Annually = 24.13%
+   ISP.MI Daily = 1.04%  Monthly = 4.75%  Annually = 16.47%
+   BGN.MI Daily = 1.03%  Monthly = 4.73%  Annually = 16.38%
+   IF.MI Daily = 1.23%  Monthly = 5.66%  Annually = 19.60%
+   ~~~
 
-output:
-~~~textmate
-------------------------------------------------------------------------------------------------------------------------
- Q S t u d i o   v0.3.5
- 2023 (c) Alberto Sfolcini <a.sfolcini@gmail.com>
- www.surprisalx.com
-------------------------------------------------------------------------------------------------------------------------
-FTSEMIB.MI Volatility: Daily = 1.52%  Monthly = 6.95%  Annually = 24.07%
-^GDAXI Volatility: Daily = 1.39%  Monthly = 6.36%  Annually = 22.03%
-ENI.MI Volatility: Daily = 1.75%  Monthly = 8.02%  Annually = 27.78%
-RACE.MI Volatility: Daily = 1.77%  Monthly = 8.12%  Annually = 28.11%
-CPR.MI Volatility: Daily = 5.55%  Monthly = 25.44%  Annually = 88.12%
-PST.MI Volatility: Daily = 1.74%  Monthly = 7.97%  Annually = 27.61%
-G.MI Volatility: Daily = 1.82%  Monthly = 8.33%  Annually = 28.85%
-BAMI.MI Volatility: Daily = 2.77%  Monthly = 12.69%  Annually = 43.96%
-AZM.MI Volatility: Daily = 2.31%  Monthly = 10.57%  Annually = 36.61%
-LDO.MI Volatility: Daily = 2.33%  Monthly = 10.67%  Annually = 36.98%
-STLAM.MI Volatility: Daily = 2.55%  Monthly = 11.69%  Annually = 40.50%
-ISP.MI Volatility: Daily = 2.47%  Monthly = 11.33%  Annually = 39.25%
-BGN.MI Volatility: Daily = 2.15%  Monthly = 9.85%  Annually = 34.10%
-IF.MI Volatility: Daily = 7.73%  Monthly = 35.42%  Annually = 122.68%
-~~~
+3. **Calculate Volatility for Given Symbols:**
+   ```textmate
+   python qstudio.py --volatility --symbols [symbols]
+   ```
+   Example:
+   ```pythonregexp
+   python qstudio.py --volatility --symbols AAPL,GOOGL,MSFT
+   ```
+   output:
+   ~~~textmate
+   ------------------------------------------------------------------------------------------------------------------------
+    Q S t u d i o   v0.3.5
+    2023 (c) Alberto Sfolcini <a.sfolcini@gmail.com>
+    www.surprisalx.com
+   ------------------------------------------------------------------------------------------------------------------------
+   VOLATILITY REPORT (Periods = 999999999 )
+   AAPL Daily = 2.80%  Monthly = 12.84%  Annually = 44.49%
+   GOOGL Daily = 1.94%  Monthly = 8.87%  Annually = 30.72%
+   MSFT Daily = 2.12%  Monthly = 9.72%  Annually = 33.67%
+   ~~~
+
+4. **Calculate Volatility for Given Symbols and Periods:**
+   ```textmate
+   python qstudio.py --volatility --symbols [symbols] --periods [periods]
+   ```
+   Example:
+   ```pythonregexp
+   python qstudio.py --volatility --symbols AAPL,GOOGL,MSFT --periods 21
+   ```
+   output:
+   ~~~textmate
+   ------------------------------------------------------------------------------------------------------------------------
+   Q S t u d i o   v0.3.5
+   2023 (c) Alberto Sfolcini <a.sfolcini@gmail.com>
+   www.surprisalx.com
+   ------------------------------------------------------------------------------------------------------------------------
+   VOLATILITY REPORT (Periods = 21 )
+   AAPL Daily = 0.91%  Monthly = 4.17%  Annually = 14.45%
+   GOOGL Daily = 1.72%  Monthly = 7.88%  Annually = 27.30%
+   MSFT Daily = 0.98%  Monthly = 4.47%  Annually = 15.49%
+   ~~~
 
 ## Important Notes
 
