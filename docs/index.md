@@ -7,6 +7,7 @@
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Configuration](#configuration)
+- [Contacts](#contacts)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -16,20 +17,22 @@ QStudio is an advanced tool designed for in-depth analysis of financial markets,
 
 The tool allows users to explore, analyze, and identify potential anomalies using advanced quantitative techniques.
 
+QStudio has played a pivotal role in the study and development of hundreds of trading strategies actively employed by its creator, [Alberto Sfolcini](mailto:a.sfolcini@gmail.com).
+
+
 ## Features
 
-- **[Correlation Matrix](correlation_matrix.md):** Generate a correlation matrix between symbols.
-- **Yields Visualization:** Visualize yields (daily, weekly, monthly).
-- **[Volatility Measurement](volatility.md):** Measure volatility for specified periods.
-- **Autocorrelation:** Measure AR(x).
-- **[Detect Market Behavior](detect_market_behavior.md):** Identifies the nature of a specific financial symbol, indicating whether its price behavior is characterized by mean-reverting, trending, or random movements.
+- **[Correlation Matrix](correlation_matrix.md#qstudio---correlation-matrix):** Generate a correlation matrix between symbols.
+- **[Yields Visualization](yields.md#qstudio---yields-visualization):** Visualize yields (daily, weekly, monthly).
+- **[Volatility Measurement](volatility.md#qstudio---volatility):** Measure volatility for specified periods.
+- **[Autocorrelation](autocorrelation.md#qstudio---autocorrelation):** Measure AR(x).
+- **[Detect Market Behavior](detect_market_behavior.md#qstudio---detect-market-behavior):** Identifies the nature of a specific financial symbol, indicating whether its price behavior is characterized by mean-reverting, trending, or random movements.
 - **Backtester:** Test algorithmic strategies in a virtual environment.
-- **[Datahub Integration](datahub.md):** Manage financial data with ease using the integrated Datahub.
+- **[Datahub Integration](datahub.md#qstudio---data-hub):** Manage financial data with ease using the integrated Datahub.
 - **Charting:** Produce basic charts (line or candles)
 - **Strategy Equity Check:** Provides in-depth information on the performance of implemented trading strategies, facilitating a thorough evaluation of the tactics employed.
 
 ## Requirements
-
 **Python Version:**
 - QStudio is developed in Python, so make sure you have a compatible version installed. It is recommended to use Python version 3.9 or higher.
 
@@ -55,9 +58,9 @@ QStudio allows you to configure default symbols. To view or modify the configura
 
 You can edit symbols in the config/symbols file, following the syntax used by Yahoo Finance symbols.
 
-## Examples
 
-Explore advanced examples of QStudio usage in the [examples.md](./docs/examples.md) file.
+## Contacts
+[Alberto Sfolcini](mailto:a.sfolcini@gmail.com) ([qstudio.surprisalx.com](https://qstudio.surprisalx.com))
 
 ## Contributing
 
@@ -66,3 +69,4 @@ If you would like to contribute to QStudio, please follow the guidelines in [CON
 ## License
 
 QStudio is licensed under the [MIT License](./LICENSE).
+

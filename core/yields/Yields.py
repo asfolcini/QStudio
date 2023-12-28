@@ -192,7 +192,7 @@ class Yields:
                test_pass = "PASSED"
             else:
                test_pass = "FAILED"
-            print("P-value: ", df_stationarityTest[1], " is < 0.05 ? ==> STATIONARITY TEST ", test_pass)
+            print("[", str(s), "] P-value: ", df_stationarityTest[1], " is < 0.05 ? ==> STATIONARITY TEST ", test_pass)
 
             # Next step is to find the order of AR model to be trained
             # for this, we will plot partial autocorrelation plot to assess
