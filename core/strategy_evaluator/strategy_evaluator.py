@@ -4,7 +4,7 @@ from core.analyzer.QAnalyzer import Analyzer
 from prettytable import PrettyTable
 from matplotlib import pyplot as plt
 
-def check_strategies(folder, report=False, ):
+def strategy_evaluator(folder, report=False, ):
     summary = [['filepath', 'strategy', 'status', 'sharpe_ratio_ann']]
     if report:
         plt.figure(figsize=(12, 6))

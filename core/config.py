@@ -16,10 +16,10 @@ AUTHOR="Alberto Sfolcini <a.sfolcini@gmail.com>"
 VERBOSE=False
 
 # Online QStudio Docuemntation
-ONLINE_DOCS_URL="https://surprisalx.com/QStudio.html"
+ONLINE_DOCS_URL="https://github.com/asfolcini/QStudio/blob/main/docs/index.md"
 
 # Check strategy url
-CHECK_STRATEGY_HELP_URL="https://surprisalx.com/check_strategy.html"
+CHECK_STRATEGY_HELP_URL="https://github.com/asfolcini/QStudio/blob/main/docs/strategy_equity_check.md"
 
 # File that contains the symbol list separated by comma
 SYMBOLS_FILEPATH="./config/symbols"

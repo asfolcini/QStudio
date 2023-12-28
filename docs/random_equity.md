@@ -1,0 +1,35 @@
+# QStudio - Random Equity
+
+[Home](index.md)
+
+Allows users to generate a specified number of random equities and organize them within a designated folder. This feature is valuable for creating simulated datasets that mimic the characteristics of real equities, enabling users to test various scenarios and strategies.
+
+## Usage
+
+```textmate
+python qstudio.py --random_equity --folder [folder] [Nr]
+python qstudio.py --random_equity --clean --folder [folder]
+```
+
+- `--random_equity --folder [folder] [Nr]`: Generate a specified number of random equities and store them in the given folder.
+- `--random_equity --clean --folder [folder]`: Clean the contents of the specified folder by removing all generated random equities.
+
+## Example
+
+```pythonregexp
+python qstudio.py --random_equity --folder ./random_equities 5
+```
+
+This command generates 5 random equities and saves them in the "./random_equities" folder.
+
+```pythonregexp
+python qstudio.py --random_equity --clean --folder ./random_equities
+```
+
+This command cleans the contents of the "./random_equities" folder by removing all previously generated random equities.
+
+## Caution
+
+While the Random Equities function provides flexibility in creating and managing simulations, users should exercise caution when interpreting results. Random equities lack strategic elements present in actual trading, and the generated curves are intended for analytical and comparative purposes.
+
+[Top](#qstudio---random-equity)

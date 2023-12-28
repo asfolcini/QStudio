@@ -22,15 +22,16 @@ QStudio has played a pivotal role in the study and development of hundreds of tr
 
 ## Features
 
-- **[Correlation Matrix](correlation_matrix.md#qstudio---correlation-matrix):** Generate a correlation matrix between symbols.
-- **[Yields Visualization](yields.md#qstudio---yields-visualization):** Visualize yields (daily, weekly, monthly).
-- **[Volatility Measurement](volatility.md#qstudio---volatility):** Measure volatility for specified periods.
-- **[Autocorrelation](autocorrelation.md#qstudio---autocorrelation):** Measure AR(x).
-- **[Detect Market Behavior](detect_market_behavior.md#qstudio---detect-market-behavior):** Identifies the nature of a specific financial symbol, indicating whether its price behavior is characterized by mean-reverting, trending, or random movements.
-- **Backtester:** Test algorithmic strategies in a virtual environment.
-- **[Datahub Integration](datahub.md#qstudio---data-hub):** Manage financial data with ease using the integrated Datahub.
+- **[Correlation Matrix](correlation_matrix.md):** Generate a correlation matrix between symbols.
+- **[Yields Visualization](yields.md):** Visualize yields (daily, weekly, monthly).
+- **[Volatility Measurement](volatility.md):** Measure volatility for specified periods.
+- **[Autocorrelation](autocorrelation.md):** Measure AR(x).
+- **[Detect Market Behavior](detect_market_behavior.md):** Identifies the nature of a specific financial symbol, indicating whether its price behavior is characterized by mean-reverting, trending, or random movements.
 - **Charting:** Produce basic charts (line or candles)
-- **Strategy Equity Check:** Provides in-depth information on the performance of implemented trading strategies, facilitating a thorough evaluation of the tactics employed.
+- **[Random Equity](random_equity.md):** Create a diverse set of random equity curves for various purposes, including testing, analysis, and comparison.
+- **[Strategy Evaluator](strategy_evaluator.md):** Provides a comprehensive toolkit for strategy evaluation.
+- **[Datahub Integration](datahub.md):** Manage financial data with ease using the integrated Datahub.
+- **Algorithmic Backtester:** Test algorithmic strategies in a virtual environment.
 
 ## Requirements
 **Python Version:**

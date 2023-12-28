@@ -12,7 +12,7 @@ from core.correlation_matrix.CorrelationMatrix import CorrelationMatrix
 from core.yields.Yields import Yields
 from core.charts.Charts import Charts
 from core.random_equity import random_equity as random_eq
-from core.check_strategy import check_strategy as cs
+from core.strategy_evaluator import strategy_evaluator as cs
 from core.hurst.hurst_exponent import Hurst_Exponent as Hurst_Exponent
 import names
 import webbrowser
@@ -189,7 +189,7 @@ def check_strategy_help():
 
 def check_strategy(folder="./equities/", report=False):
     print("Check Strategy in folder "+str(folder))
-    cs.check_strategies(folder, report)
+    cs.strategy_evaluator(folder, report)
     return
 
 def check_single_strategy(equity_filepath="./equities/", report=False):
@@ -447,29 +447,29 @@ def main():
             return
 
     """
-    CHECK STRATEGY
+    STRATEGY EVALUATOR
     """
-    if len(args) == 2 and args[0] == '--check_strategy':
+    if len(args) == 2 and args[0] == '--strategy_evaluator':
         if args[1] == '--help':
             check_strategy_help()
             return
-    if len(args) == 3 and args[0] == '--check_strategy':
+    if len(args) == 3 and args[0] == '--strategy_evaluator':
         if args[1] == '--folder' and args[2] != '':
             check_strategy(args[2], report=False)
             return
-    if len(args) == 4 and args[0] == '--check_strategy':
+    if len(args) == 4 and args[0] == '--strategy_evaluator':
         if args[1] == '--folder' and args[2] != '' and args[3]=='--report':
             check_strategy(args[2], report=True)
             return
 
     """
-        CHECK SINGLE STRATEGY
+        CHECK SINGLE STRATEGY EVALUATOR
         """
-    if len(args) == 3 and args[0] == '--check_single_strategy':
+    if len(args) == 3 and args[0] == '--single_strategy_evaluator':
         if args[1] == '--file' and args[2] != '':
             check_single_strategy(args[2], report=False)
             return
-    if len(args) == 4 and args[0] == '--check_single_strategy':
+    if len(args) == 4 and args[0] == '--single_strategy_evaluator':
         if args[1] == '--file' and args[2] != '' and args[3]=='--report':
             check_single_strategy(args[2], report=True)
             return
@@ -573,16 +573,16 @@ def usage():
 
     # RANDOM EQUITY
     print(" RANDOM EQUITIES")
-    print(" --random_equity --folder [folder] [Nr]  : generate a number of random equities in the given folder")
-    print(" --random_equity --clean [folder]        : clean the given folder")
+    print(" --random_equity --folder [folder] [Nr]      : generate a number of random equities in the given folder")
+    print(" --random_equity --clean --folder [folder]   : clean the given folder")
 
     # CHECK STRATEGIES
-    print(" CHECK STRATEGIES")
-    print(" --check_strategy --help                          : show how to use the check strategy")
-    print(" --check_strategy --folder [folder]               : run the check strategy, no charts")
-    print(" --check_strategy --folder [folder] --report      : run the check strategy and produce a report")
-    print(" --check_single_strategy --file [folder]          : run the check strategy, no charts")
-    print(" --check_single_strategy --file [folder] --report : run the check strategy and produce a report")
+    print(" STRATEGY EVALUATOR")
+    print(" --strategy_evaluator --help                          : show how to use the strategy_evaluator")
+    print(" --strategy_evaluator --folder [folder]               : run the strategy_evaluator, no charts")
+    print(" --strategy_evaluator --folder [folder] --report      : run the strategy_evaluator and produce a report")
+    print(" --single_strategy_evaluator --file [folder]          : run the strategy_evaluator, no charts")
+    print(" --single_strategy_evaluator --file [folder] --report : run the strategy_evaluator and produce a report")
 
     # HURST EXPONENT
     print(" DETECT MARKET BEHAVIOR")
