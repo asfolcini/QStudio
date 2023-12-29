@@ -163,6 +163,7 @@ def chart(_symbols, show=True, _periods=9999, candles=False):
         c.generate_line(_periods)
 
 def random_equity(folder="./equities/", nr=1):
+    header()
     today = datetime.date.today()
     # generate random equities
     for i in range(nr):
@@ -174,6 +175,7 @@ def random_equity(folder="./equities/", nr=1):
     return
 
 def random_equity_delete(folder="./equities/"):
+    header()
     print("Cleaning folder "+str(folder))
     for filename in os.listdir(folder):
         f = os.path.join(folder, filename)
@@ -183,21 +185,25 @@ def random_equity_delete(folder="./equities/"):
     return
 
 def check_strategy_help():
+    header()
     print("Redirect to "+cfg.CHECK_STRATEGY_HELP_URL)
     webbrowser.open(cfg.CHECK_STRATEGY_HELP_URL)
     return
 
 def check_strategy(folder="./equities/", report=False):
+    header()
     print("Check Strategy in folder "+str(folder))
     cs.strategy_evaluator(folder, report)
     return
 
 def check_single_strategy(equity_filepath="./equities/", report=False):
+    header()
     print("Check single Strategy with equity file: "+str(equity_filepath))
     cs.check_single_strategy(equity_filepath, equity_filepath, report)
     return
 
 def open_onlinedoc():
+    header()
     print("Redirect to "+cfg.ONLINE_DOCS_URL)
     webbrowser.open(cfg.ONLINE_DOCS_URL)
     return
