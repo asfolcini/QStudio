@@ -76,7 +76,7 @@ def run_backtest(symbol, qty=100, mode='BACKTEST', _sma_filter=False,verbose=Fal
     #s.parameters(2,4,7,qty)
     s.set_filters(sma_filter=_sma_filter)
     s.set_stop_loss(-500)
-    s.backtest_period("2000<<1  -07-01 00:00:00")
+    s.backtest_period("2000-07-01 00:00:00")
     if mode == 'SIGNAL':
         s.set_telegram_instant_message(True)
     s.set_verbose(verbose)
