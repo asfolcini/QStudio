@@ -1,6 +1,12 @@
 from core.utils import *
 import array
 from core.Candle import Candle
+
+PATTERNS_NUMBER = 9
+
+def get_number_of_patterns():
+    return PATTERNS_NUMBER
+
 def filter_pattern(events, pattern_nr):
     """
     List of Patterns to use as a filter or entry/exit conditions.

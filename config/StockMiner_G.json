@@ -1,0 +1,14 @@
+{
+  "name": "StockMiner",
+  "symbols": "G.MI",
+  "quantity": 1000,
+  "strategy": {
+    "type": "mean-reverting",
+    "engine": "RSI_base",
+    "rsi-period": 10,
+    "rsi-low-level": 35,
+    "rsi-high-level": 65
+  },
+  "trend-filter": false,
+  "entry-pattern": 8
+}

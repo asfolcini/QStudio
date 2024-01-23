@@ -16,6 +16,10 @@ from core.strategy_evaluator import strategy_evaluator as cs
 from core.hurst.hurst_exponent import Hurst_Exponent as Hurst_Exponent
 import names
 import webbrowser
+from core.strategy.Hack_Strategy import Hack_Strategy
+from core.strategy.Miner_Strategy import strategy_execute
+import pandas
+from core.QBacktester import ExecutionMode
 
 
 def datahub_update_all():
@@ -57,7 +61,6 @@ def config_symbols():
         print(" - " + str(x))
 
 
-
 def config_show():
     """
     CONFIG_SHOW
@@ -70,9 +73,7 @@ def config_show():
     print("OUTPUT REPOSITORY    : " + str(cfg.OUTPUT_REPOSITORY))
 
 
-
-
-def correlation_matrix_show(show=True,periods=21):
+def correlation_matrix_show(show=True, periods=21):
     """
     CORRELATION_MATRIX_SHOW: show correlation matrix for the configured symbols
     """
@@ -82,8 +83,7 @@ def correlation_matrix_show(show=True,periods=21):
     cm.generate(periods)
 
 
-
-def correlation_matrix_symbols(_symbols, show=True,periods=21):
+def correlation_matrix_symbols(_symbols, show=True, periods=21):
     """
     CORRELATION_MATRIX_SYMBOLS: show correlation matrix for the given symbols
     """
@@ -93,6 +93,7 @@ def correlation_matrix_symbols(_symbols, show=True,periods=21):
     cm = CorrelationMatrix(s, show)
     cm.generate(periods)
 
+
 def yields(_symbols, show=True, periods=252, overlay=False):
     """
     YIELDS
@@ -100,8 +101,9 @@ def yields(_symbols, show=True, periods=252, overlay=False):
     header()
     s = Datahub(loadfromconfig=True)
     s.set_symbols(_symbols)
-    ys = Yields(s, show,overlay=overlay)
+    ys = Yields(s, show, overlay=overlay)
     ys.generate(periods)
+
 
 def yields_weekly(_symbols, show=True, periods=252, overlay=False):
     """
@@ -110,8 +112,9 @@ def yields_weekly(_symbols, show=True, periods=252, overlay=False):
     header()
     s = Datahub(loadfromconfig=True)
     s.set_symbols(_symbols)
-    ys = Yields(s, show,overlay=overlay)
+    ys = Yields(s, show, overlay=overlay)
     ys.generate_week(periods)
+
 
 def yields_monthly(_symbols, show=True, periods=9999, overlay=False):
     """
@@ -120,8 +123,9 @@ def yields_monthly(_symbols, show=True, periods=9999, overlay=False):
     header()
     s = Datahub(loadfromconfig=True)
     s.set_symbols(_symbols)
-    ys = Yields(s, show,overlay=overlay)
+    ys = Yields(s, show, overlay=overlay)
     ys.generate_month(periods)
+
 
 def volatility(_symbols, periods=999999999):
     """
@@ -129,28 +133,32 @@ def volatility(_symbols, periods=999999999):
     """
     header()
     s = Datahub(loadfromconfig=True)
-    if _symbols != None:
+    if _symbols is not None:
         s.set_symbols(_symbols)
     ys = Yields(s, False, overlay=False)
     ys.get_volatility(periods)
 
+
 def autocorrelation(_symbols, show=True):
     """
-    AUTOCORRELATION
     :param _symbols:
+    :param show:
     :return:
     """
     header()
     s = Datahub(loadfromconfig=True)
     s.set_symbols(_symbols)
-    ys = Yields(s, show , overlay=False)
+    ys = Yields(s, show, overlay=False)
     ys.autocorrelation()
+
 
 def chart(_symbols, show=True, _periods=9999, candles=False):
     """
-    CHART candlesticks
+
     :param _symbols:
     :param show:
+    :param _periods:
+    :param candles:
     :return:
     """
     header()
@@ -161,6 +169,7 @@ def chart(_symbols, show=True, _periods=9999, candles=False):
         c.generate(_periods)
     else:
         c.generate_line(_periods)
+
 
 def random_equity(folder="./equities/", nr=1):
     header()
@@ -174,6 +183,7 @@ def random_equity(folder="./equities/", nr=1):
                                          filepath=str(os.path.join(folder, ''))+str(rand_name)+"_eq.csv")
     return
 
+
 def random_equity_delete(folder="./equities/"):
     header()
     print("Cleaning folder "+str(folder))
@@ -184,11 +194,13 @@ def random_equity_delete(folder="./equities/"):
             print(" . deleting file "+str(f))
     return
 
+
 def check_strategy_help():
     header()
     print("Redirect to "+cfg.CHECK_STRATEGY_HELP_URL)
     webbrowser.open(cfg.CHECK_STRATEGY_HELP_URL)
     return
+
 
 def check_strategy(folder="./equities/", report=False):
     header()
@@ -196,11 +208,13 @@ def check_strategy(folder="./equities/", report=False):
     cs.strategy_evaluator(folder, report)
     return
 
+
 def check_single_strategy(equity_filepath="./equities/", report=False):
     header()
     print("Check single Strategy with equity file: "+str(equity_filepath))
     cs.check_single_strategy(equity_filepath, equity_filepath, report)
     return
+
 
 def open_onlinedoc():
     header()
@@ -208,15 +222,100 @@ def open_onlinedoc():
     webbrowser.open(cfg.ONLINE_DOCS_URL)
     return
 
+
 def detect_market_behavior(_symbols):
     header()
     s = Datahub(loadfromconfig=True)
     if _symbols != None:
         s.set_symbols(_symbols)
     he = Hurst_Exponent(s)
-    #he.set_margin_percentage(0.1)
+    # he.set_margin_percentage(0.1)
     he.calc()
     return
+
+
+def hack_opt(_symbols, _qty, _mean_reverting=True, _trend_filter=False, _entry_pattern=0):
+    """
+    :param _symbols:
+    :param _qty:
+    :param _mean_reverting:
+    :param _trend_filter:
+    :param _entry_pattern:
+    :return:
+    """
+    header()
+    print(" HACKING THE MARKET FOR FUN AND PROFIT")
+    s = Datahub(loadfromconfig=True)
+    if _symbols != None:
+        s.set_symbols(_symbols)
+
+    for s in s.get_symbols():
+        x = Hack_Strategy("Hacking the Market for Fun and Profit", s)
+        x.set_quantity(_qty)
+        x.backtest_period("2000-01-20 00:00:00")
+        x.set_verbose(False)
+        x.set_trend_follower(not _mean_reverting)
+        x.set_trend_filter(_trend_filter)
+        x.set_entry_pattern(_entry_pattern)
+        x.run()
+        x.get_stats_report()
+        x.plot_equity()
+        x.plot_yield_by_years()
+        # x.plot_yield_by_yearsmonths()
+        x.show_historical_positions(20)
+
+    return
+
+
+def hack(_symbols, _qty=100, _mean_reverting=None):
+    header()
+    print(" HACKING THE MARKET FOR FUN AND PROFIT")
+    s = Datahub(loadfromconfig=True)
+    if _symbols != None:
+        s.set_symbols(_symbols)
+
+    _data = []
+    for s in s.get_symbols():
+        # for each symbol in symbols...
+        for trend_filter in (True, False):
+            for entry_pattern in range(0, 10):
+                if _mean_reverting == None:
+                    for mean_reverting in (True, False):
+                        if mean_reverting:
+                            mtype = "Mean-Reverting"
+                        else:
+                            mtype = "Trend-Following"
+                        x = Hack_Strategy("Hacking the Market for Fun and Profit", s)
+                        x.set_quantity(_qty)
+                        x.backtest_period("2000-01-20 00:00:00")
+                        x.set_verbose(False)
+                        x.set_trend_follower(not mean_reverting)
+                        x.set_trend_filter(trend_filter)
+                        x.set_entry_pattern(entry_pattern)
+                        x.run()
+                        _data.append([x.symbol, mtype, entry_pattern, trend_filter, x.pnl, x.average_trade, x.tot_trades, x.maxdd])
+                else:
+                    if _mean_reverting:
+                        mtype = "Mean-Reverting"
+                    else:
+                        mtype = "Trend-Following"
+                    x = Hack_Strategy("Hacking the Market for Fun and Profit", s)
+                    x.set_quantity(_qty)
+                    x.backtest_period("2000-01-20 00:00:00")
+                    x.set_verbose(False)
+                    x.set_trend_follower(not _mean_reverting)
+                    x.set_trend_filter(trend_filter)
+                    x.set_entry_pattern(entry_pattern)
+                    x.run()
+                    _data.append([x.symbol, mtype, entry_pattern, trend_filter, x.pnl, x.average_trade, x.tot_trades, x.maxdd])
+
+    opt = pandas.DataFrame(_data, columns=['Symbol', 'Strategy Type', 'Entry Pattern', 'Trend Filter', 'pnl', 'avgtrade', '#Trades', 'maxdd'])
+    opt = opt.sort_values(['avgtrade', 'pnl', '#Trades'], ascending=False)
+    print("--"*40)
+    print(" R E S U L T S")
+    print(opt.head(30))
+    return
+
 
 def main():
     """
@@ -265,17 +364,17 @@ def main():
     if len(args) == 1 and args[0] == '--correlation_matrix':
         correlation_matrix_show(True)
         return
-    if len(args) == 2  and args[0] == '--correlation_matrix':
+    if len(args) == 2 and args[0] == '--correlation_matrix':
         if args[1] == '--save':
             correlation_matrix_show(False)
             return
     if len(args) == 3 and args[0] == '--correlation_matrix':
         if args[1] == '--periods' and args[2] != '':
-            correlation_matrix_show(True,int(args[2]))
+            correlation_matrix_show(True, int(args[2]))
             return
     if len(args) == 4 and args[0] == '--correlation_matrix':
         if args[1] == '--periods' and args[2] != '' and args[3] == '--save':
-            correlation_matrix_show(False,int(args[2]))
+            correlation_matrix_show(False, int(args[2]))
             return
     if len(args) == 3 and args[0] == '--correlation_matrix':
         if args[1] == '--symbols' and args[2] != '':
@@ -327,7 +426,7 @@ def main():
             return
     if len(args) == 7 and args[0] == '--yields' and args[3] == '--periods' and args[5] == '--save' and args[6] == '--overlay':
         if args[1] == '--symbols' and args[2] != '' and args[4] != '':
-            yields(args[2], False, int(args[4]),overlay=True)
+            yields(args[2], False, int(args[4]), overlay=True)
             return
     """
     YIELDS_WEEKLY
@@ -383,13 +482,9 @@ def main():
             volatility(args[2])
             return
     if len(args) == 5 and args[0] == '--volatility':
-        if args[1] == '--symbols' and args[2] != '' and args[3]=='--periods' and args[4] != '':
-            volatility(args[2],int(args[4]))
+        if args[1] == '--symbols' and args[2] != '' and args[3] == '--periods' and args[4] != '':
+            volatility(args[2], int(args[4]))
             return
-
-
-
-
 
     """
        AUTOCORRELATION
@@ -412,15 +507,15 @@ def main():
             return
     if len(args) == 4 and args[0] == '--chart_candles' and args[3] == '--save':
         if args[1] == '--symbols' and args[2] != '':
-            chart(args[2], show=False ,candles=True)
+            chart(args[2], show=False, candles=True)
             return
     if len(args) == 5 and args[0] == '--chart_candles' and args[3] == '--periods':
         if args[1] == '--symbols' and args[2] != '':
-            chart(args[2], show=True , _periods=int(args[4]) ,candles=True)
+            chart(args[2], show=True, _periods=int(args[4]), candles=True)
             return
     if len(args) == 6 and args[0] == '--chart_candles' and args[3] == '--periods' and args[5] == '--save':
         if args[1] == '--symbols' and args[2] != '':
-            chart(args[2], show=False , _periods=int(args[4]) ,candles=True)
+            chart(args[2], show=False, _periods=int(args[4]), candles=True)
             return
 
     if len(args) == 3 and args[0] == '--chart':
@@ -433,11 +528,11 @@ def main():
             return
     if len(args) == 5 and args[0] == '--chart' and args[3] == '--periods':
         if args[1] == '--symbols' and args[2] != '':
-            chart(args[2], show=True, _periods=int(args[4]) , candles=False)
+            chart(args[2], show=True, _periods=int(args[4]), candles=False)
             return
     if len(args) == 6 and args[0] == '--chart' and args[3] == '--periods' and args[5] == '--save':
         if args[1] == '--symbols' and args[2] != '':
-            chart(args[2], show=False, _periods=int(args[4]) , candles=False)
+            chart(args[2], show=False, _periods=int(args[4]), candles=False)
             return
 
     """
@@ -464,7 +559,7 @@ def main():
             check_strategy(args[2], report=False)
             return
     if len(args) == 4 and args[0] == '--strategy_evaluator':
-        if args[1] == '--folder' and args[2] != '' and args[3]=='--report':
+        if args[1] == '--folder' and args[2] != '' and args[3] == '--report':
             check_strategy(args[2], report=True)
             return
 
@@ -476,7 +571,7 @@ def main():
             check_single_strategy(args[2], report=False)
             return
     if len(args) == 4 and args[0] == '--single_strategy_evaluator':
-        if args[1] == '--file' and args[2] != '' and args[3]=='--report':
+        if args[1] == '--file' and args[2] != '' and args[3] == '--report':
             check_single_strategy(args[2], report=True)
             return
 
@@ -491,11 +586,53 @@ def main():
             detect_market_behavior(args[2])
             return
 
+    """
+    HACK
+    """
+    if len(args) == 4 and args[0] == '--hack':
+        if args[1] == '--symbols' and args[2] != '':
+            hack(args[2], int(args[3]), None)
+            return
+    if len(args) == 5 and args[0] == '--hack':
+        if args[1] == '--symbols' and args[2] != '' and args[4] != '':
+            if args[4] == '--mean-reverting':
+                mr = True
+            else:
+                mr = False
+            hack(args[2], int(args[3]), _mean_reverting=mr)
+            return
+    if len(args) == 7 and args[0] == '--hack':
+        if args[1] == '--symbols' and args[2] != '':
+            if args[4] == '--mean-reverting':
+                mr = True
+            else:
+                mr = False
+            if args[5] == '--sma-filter-on':
+                tf = True
+            else:
+                tf = False
+            hack_opt(args[2], int(args[3]), mr, tf, args[6])
+            return
 
+    """
+    STOCKMINER
+    """
+    if len(args) == 2 and args[0] == '--stock-miner':
+        if args[1] != '':
+            strategy_execute(args[1], ExecutionMode.BACKTEST)
+            return
+    if len(args) == 3 and args[0] == '--stock-miner':
+        if args[1] != '' and args[2] == '--signal':
+            strategy_execute(args[1], ExecutionMode.SIGNAL)
+            return
+        if args[1] != '' and args[2] == '--backtest':
+            strategy_execute(args[1], ExecutionMode.BACKTEST)
+            return
+        if args[1] != '' and args[2] == '--optimize':
+            strategy_execute(args[1], ExecutionMode.OPTIMIZE)
+            return
 
     usage()
-
-
 
 
 def usage():
@@ -544,7 +681,6 @@ def usage():
     print(" --yields_monthly --symbols [symbols] --periods [periods]         : show monthly yields chart for given symbols for the given periods")
     print(" --yields_monthly --symbols [symbols] --periods [periods] --save  : save monthly yields chart for given symbols for the given periods")
 
-
     # VOLATILITY WEEKLY
     print(" VOLATILITY")
     print(" --volatility                                         : calc volatility for configured symbols with max periods")
@@ -556,7 +692,6 @@ def usage():
     print(" AUTOCORRELATION")
     print(" --autocorrelation --symbols [symbols]         : show autocorrelation AR(x) of last 21 periods")
     print(" --autocorrelation --symbols [symbols] --save  : save autocorrelation AR(x) of last 21 periods")
-
 
     # DATA HUB
     print(" DATAHUB ")
@@ -595,12 +730,24 @@ def usage():
     print(" --detect_market_behavior                                : detect market behavior for all configured symbols")
     print(" --detect_market_behavior --symbols [symbols]            : detect market behavior for given symbols")
 
+    # HACKING THE MARKET FOR FUN AND PROFIT
+    print(" HACKING THE MARKET FOR FUN AND PROFIT")
+    print(" --hack --symbols [symbols] [qty]                                        : hack scan for given symbols and specified quantity")
+    print(" --hack --symbols [symbols] [qty] [--mean-reverting | --trend-following] : hack scan for given symbols and specified strategy type")
+    print(" --hack --symbols [symbols] [qty] [--mean-reverting | --trend-following] [--sma-filter-on | --sma-filter-off] [entry_pattern]    : execute with specific parameters")
 
+    # STOCK MINER STRATEGY
+    print(" STOCK MINER")
+    print(" --stock-miner [strategy_config_file.json]              : execute strategy in backtest mode")
+    print(" --stock-miner [strategy_config_file.json] --signal     : execute strategy for signal mode")
+    print(" --stock-miner [strategy_config_file.json] --backtest   : execute strategy for backtest mode")
+    print(" --stock-miner [strategy_config_file.json] --optimize   : execute strategy in optimization mode")
 
     print(" USAGE")
     # USAGE
     print(" --help                      : usage instructions")
     print(" --documentation             : open online documentation")
+
 
 def header():
     """

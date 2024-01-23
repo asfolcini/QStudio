@@ -4,7 +4,7 @@
 # www.surprisalx.com
 #=======================================================================================================================
 from core import Candle
-
+import time
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Load content from text file and return it
@@ -13,6 +13,14 @@ def load_from_file(filepath):
     with open(filepath) as f:
         content = f.read()
     return content
+
+def get_formatted_time(start_time):
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    hours, remainder = divmod(elapsed_time, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    formatted_time = "{:02}:{:02}:{:02}".format(int(hours), int(minutes), int(seconds))
+    return formatted_time
 
 def get_last_values(events, last_value_nr=2):
     """

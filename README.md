@@ -21,7 +21,12 @@ QStudio offers a variety of commands for different analyses. Here are some examp
 - Visualize yields: `python qstudio.py --yields --symbols AAPL,GOOGL`
 - Measure volatility: `python qstudio.py --volatility --symbols MSFT`
 
-For more detailed usage instructions, refer to the [documentation](./docs/index.md).
+For more detailed usage instructions, refer to the [documentation](https://surprisalx.com/qstudio/index.php).
 
 ## Licence
 n/a
+
+## TODO LIST
+- Add commissions costs
+- Add reading of custom csv for historical data
+- A Complete Report for a Symbol

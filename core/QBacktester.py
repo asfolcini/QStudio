@@ -7,8 +7,8 @@ import copy
 from datetime import datetime
 
 import pandas
-import numpy as np
 from matplotlib import pyplot as plt
+
 
 import core.config
 from core.Candle import Candle
@@ -16,6 +16,13 @@ from core.Datahub import Datahub
 from core.Order import Order, OrderSide, OrderStatus, OrderType
 from core.Position import Position, PositionStatus, PositionSide
 from core.telegram_bot import Telegram_Message
+from enum import Enum
+
+class ExecutionMode(Enum):
+    BACKTEST = '--backtest'
+    SIGNAL = '--signal'
+    OPTIMIZE = '--optimize'
+
 
 class QBacktester(object):
 
@@ -342,6 +349,15 @@ class QBacktester(object):
             self.maxloss = self.df['pnl'].min()
             self.maxwin = self.df['pnl'].max()
             self.avgLoss = self.df['pnl'][self.df['pnl'] < 0.0 ].mean()
+            self.winrate = (self.tot_trades_pos/self.tot_trades)*100
+            if self.tot_trades_neg > 0:
+                self.profit_factor = self.tot_trades/self.tot_trades_neg
+            else:
+                self.profit_factor = 0.0
+            if self.pnl != 0.0:
+                self.maxdd_pct = (self.maxdd / self.pnl) * 100
+            else:
+                self.maxdd_pct = 0.0
 
             if self.verbose: print(". backtest finished.")
             self.onStop()
@@ -353,9 +369,12 @@ class QBacktester(object):
             self.average_trade = 0.0
             self.stddev = 0.0
             self.maxdd = 0.0
+            self.maxdd_pct = 0.0
             self.maxloss = 0.0
             self.maxwin = 0.0
             self.avgLoss = 0.0
+            self.winrate = 0.0
+            self.profit_factor = 0.0
         pass
 
     def build_target_portfolio_message(self, title=None):

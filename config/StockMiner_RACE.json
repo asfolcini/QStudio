@@ -1,0 +1,31 @@
+{
+  "name": "StockMiner",
+  "symbols": "ENI.MI",
+  "quantity": 1000,
+
+  "strategy": {
+    "type": "mean-reverting",
+    "_type-comment": "Allow values: mean-reverting, trend-following",
+    "engine": "RSI_base",
+    "_engine_comment": "Allow values: RSI_base",
+    "rsi-period": 6,
+    "rsi-low-level": 35,
+    "rsi-high-level": 80,
+    "trend-filter": false,
+    "entry-pattern": 5
+  },
+
+  "backtest-data": {
+    "from": "2000-01-01 00:00:00",
+    "to": "2021-01-01 00:00:00"
+  },
+
+  "optimize": {
+    "rsi-period": [6, 8, 2],
+    "rsi-low-level": [35, 40, 5],
+    "rsi-high-level": [80, 85, 5],
+    "trend-filter": [false,true],
+    "entry-pattern": [0, 10],
+    "order_by": ["pnl", "profit_factor"]
+  }
+}
