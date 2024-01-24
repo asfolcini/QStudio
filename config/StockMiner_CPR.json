@@ -2,30 +2,18 @@
   "name": "StockMiner",
   "symbols": "CPR.MI",
   "quantity": 1000,
-
   "strategy": {
-    "type": "mean-reverting",
+    "type": "trend-following",
     "_type-comment": "Allow values: mean-reverting, trend-following",
     "engine": "RSI_base",
     "_engine_comment": "Allow values: RSI_base",
-    "rsi-period": 6,
+    "rsi-period": 12,
     "rsi-low-level": 35,
     "rsi-high-level": 80,
     "trend-filter": false,
-    "entry-pattern": 5
+    "entry-pattern": 8
   },
-
   "backtest-data": {
-    "from": "2000-01-01 00:00:00",
-    "to": "2021-01-01 00:00:00"
-  },
-
-  "optimize": {
-    "rsi-period": [4, 16, 2],
-    "rsi-low-level": [20, 40, 5],
-    "rsi-high-level": [65, 90, 5],
-    "trend-filter": [false,true],
-    "entry-pattern": [0, 10],
-    "order_by": ["pnl", "profit_factor"]
+    "from": "2000-01-01 00:00:00"
   }
 }

@@ -19,6 +19,7 @@ VERBOSE=False
 
 # Settign default pandas options
 pd.set_option('display.max_columns', None)
+pd.set_option('display.width', None)
 
 
 # Online QStudio Docuemntation
