@@ -225,3 +225,4 @@ wcwidth==0.2.6
 webencodings==0.5.1
 yfinance==0.2.12
 pandas-ta
+openpyxl

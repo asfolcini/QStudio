@@ -21,10 +21,10 @@
   },
 
   "optimize": {
-    "rsi-period": [6, 16, 2],
+    "rsi-period": [2, 10, 2],
     "rsi-low-level": [20, 40, 5],
     "rsi-high-level": [65, 85, 5],
-    "trend-filter": [false,true],
+    "trend-filter": [false],
     "entry-pattern": [0, 10],
     "order_by": ["pnl", "profit_factor"]
   }

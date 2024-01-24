@@ -16,6 +16,8 @@ def save_optimization_report(name, df, inputfile, executiontime):
 
     _f = cfg.OPTIMIZATION_REPORT_PATH+'/optimization_report_'+name+'_'+lastupdate
     fname = str(_f+'.html')
+
+    # also save in xlsx file
     df.to_excel(_f+'.xlsx', index=True)
 
     with open(fname, 'w') as file:
