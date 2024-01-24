@@ -1,4 +1,3 @@
-import datetime
 import core.config as cfg
 import core.utils as utils
 
@@ -15,6 +14,9 @@ def save_optimization_report(name, df, inputfile, executiontime):
     html_document = html_document.replace("{lastupdate}", lastupdate)
     html_document = html_document.replace("{executiontime}", executiontime)
 
-    fname = str(cfg.OPTIMIZATION_REPORT_PATH+'/optimization_report_'+name+'_'+lastupdate+'.html')
+    _f = cfg.OPTIMIZATION_REPORT_PATH+'/optimization_report_'+name+'_'+lastupdate
+    fname = str(_f+'.html')
+    df.to_excel(_f+'.xlsx', index=True)
+
     with open(fname, 'w') as file:
         file.write(html_document)
