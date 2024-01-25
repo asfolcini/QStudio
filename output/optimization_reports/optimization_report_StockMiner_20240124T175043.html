@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="title" content="QStudio - Report">
+    <meta name="description" content="QStudio Optimization Report">
+    <meta name="author" content="Alberto Sfolcini">
+    <title>QStudio</title>
+
+    <link rel="canonical" href="https://surprisalx.com">
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.css" integrity="sha512-+C1cmvw5D0Pfm6Gt9em3zp3OyebHM4wo05D38a0kXm7C1MRZZ9oPTbSX3KoRxAA0b2oHCqrcJEPikiXjsNXgtw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- FONTS -->
+    <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha384-kJi81KCV6kiRufn6Wy4Bl9o35Wfm1sJz6wjs1W4W7X4wNOj1QCBbX7Sl5r77Zcz4" crossorigin="anonymous">
+    <!-- CODE formatting -->
+    <link rel="stylesheet"
+          href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/dracula.min.css">
+
+    <!-- DataTable -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+
+    <!-- Custom styles for this template -->
+    <link href="https://surprisalx.com/qstudio/assets/css/custom.css" rel="stylesheet">
+
+    <style>
+        .container, .container-lg, .container-md, .container-sm, .container-xl {
+            max-width: fit-content;
+        }
+        table{
+          text-align: right;
+          font-size: 0.9rem;
+          font-family: arial;
+          background-color: #333;
+        }
+        h2 {
+            text-transform: none;
+        }
+        .card{
+            border-color: #666;
+        }
+        .card-header {
+            background-color: #333;
+            color: #ff6b6b;
+            padding: 0px;
+        }
+        .card-body {
+            background-color: #666;
+            padding: 0px;
+            margin: 0px;
+        }
+        .btn-link,
+        .btn-link:visited,
+        .btn-link:focus,
+        .btn-link:hover {
+            color: #ff6b6b;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+<header>
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="https://surprisalx.com"><img style="filter: invert(25%);"
+                                                                   src="https://surprisalx.com/qstudio/assets/img/swanlogo_w.png" width="60px"><span
+                class="logo">QStudio</span></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav" style="margin-left: auto!important;">
+                <li class="nav-item">
+                    <a class="nav-link" href="https://surprisalx.com/qstudio/">Documentation</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href=""></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<main role="main">
+
+    <div class="container">
+
+        </br></br>
+        <h2>Optimization Report StockMiner</h2>
+        <i>updated at 20240124T175043 - execution time 00:01:31</i>
+        </br></br>
+
+        <div class="row">
+            <div class="col-lg-12 text-left">
+                <!-- ACCORDION -->
+                <div class="accordion" id="accordion">
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <p class="mb-0">
+                                <button class="btn btn-link" type="button" data-toggle="collapse"
+                                        data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    Optimization Input File
+                                    &nbsp;&nbsp;<i class="fas fa-caret-down"></i>
+                                </button>
+                            </p>
+                        </div>
+                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne"
+                             data-parent="#accordion">
+                            <div class="card-body">
+                                <pre style="margin-bottom: 0px;"><code class="language-json" style="border-radius: 0px;">{
+    "name": "StockMiner",
+    "symbols": "ENI.MI",
+    "quantity": 1000,
+    "strategy": {
+        "type": "mean-reverting",
+        "_type-comment": "Allow values: mean-reverting, trend-following",
+        "engine": "RSI_base",
+        "_engine_comment": "Allow values: RSI_base",
+        "rsi-period": 8,
+        "rsi-low-level": 30,
+        "rsi-high-level": 70,
+        "trend-filter": false,
+        "entry-pattern": 5
+    },
+    "backtest-data": {
+        "from": "2000-01-01 00:00:00",
+        "to": "2021-01-01 00:00:00"
+    },
+    "optimize": {
+        "#rsi-period": [
+            2,
+            10,
+            2
+        ],
+        "#rsi-low-level": [
+            20,
+            40,
+            5
+        ],
+        "#rsi-high-level": [
+            65,
+            85,
+            5
+        ],
+        "#trend-filter": [
+            false
+        ],
+        "entry-pattern": [
+            0,
+            10
+        ],
+        "order_by": [
+            "pnl",
+            "profit_factor"
+        ]
+    }
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END ACCORDION -->
+            </div>
+        </div>
+
+        <hr style="border: 0.05rem solid #333" width="100%">
+
+        <div class="row">
+            <div class="col-lg-12 text-left">
+                <table border="1" class="dataframe dataframe display compact hover">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>symbol</th>
+      <th>mean-reverting</th>
+      <th>entry_pattern</th>
+      <th>trend_filter</th>
+      <th>rsi_period</th>
+      <th>rsi_low</th>
+      <th>rsi_high</th>
+      <th>pnl</th>
+      <th>avgtrade</th>
+      <th>winrate</th>
+      <th>profit_factor</th>
+      <th>#Trades</th>
+      <th>maxdd</th>
+      <th>%maxdd</th>
+      <th>cfg</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>5</th>
+      <td>ENI.MI</td>
+      <td>True</td>
+      <td>5</td>
+      <td>False</td>
+      <td>8</td>
+      <td>30</td>
+      <td>70</td>
+      <td>9,295.0</td>
+      <td>165.98</td>
+      <td>82.14</td>
+      <td>5.60</td>
+      <td>56</td>
+      <td>-3,182.26</td>
+      <td>-34.24</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>ENI.MI</td>
+      <td>True</td>
+      <td>8</td>
+      <td>False</td>
+      <td>8</td>
+      <td>30</td>
+      <td>70</td>
+      <td>8,711.49</td>
+      <td>170.81</td>
+      <td>80.39</td>
+      <td>5.10</td>
+      <td>51</td>
+      <td>-2,971.89</td>
+      <td>-34.11</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>ENI.MI</td>
+      <td>True</td>
+      <td>7</td>
+      <td>False</td>
+      <td>8</td>
+      <td>30</td>
+      <td>70</td>
+      <td>8,438.08</td>
+      <td>138.33</td>
+      <td>73.77</td>
+      <td>3.81</td>
+      <td>61</td>
+      <td>-3,758.05</td>
+      <td>-44.54</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>ENI.MI</td>
+      <td>True</td>
+      <td>0</td>
+      <td>False</td>
+      <td>8</td>
+      <td>30</td>
+      <td>70</td>
+      <td>8,332.15</td>
+      <td>136.59</td>
+      <td>73.77</td>
+      <td>3.81</td>
+      <td>61</td>
+      <td>-3,758.05</td>
+      <td>-45.10</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>ENI.MI</td>
+      <td>True</td>
+      <td>6</td>
+      <td>False</td>
+      <td>8</td>
+      <td>30</td>
+      <td>70</td>
+      <td>8,310.59</td>
+      <td>136.24</td>
+      <td>73.77</td>
+      <td>3.81</td>
+      <td>61</td>
+      <td>-3,758.06</td>
+      <td>-45.22</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>ENI.MI</td>
+      <td>True</td>
+      <td>1</td>
+      <td>False</td>
+      <td>8</td>
+      <td>30</td>
+      <td>70</td>
+      <td>7,638.88</td>
+      <td>224.67</td>
+      <td>88.24</td>
+      <td>8.50</td>
+      <td>34</td>
+      <td>-2,971.89</td>
+      <td>-38.90</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>ENI.MI</td>
+      <td>True</td>
+      <td>9</td>
+      <td>False</td>
+      <td>8</td>
+      <td>30</td>
+      <td>70</td>
+      <td>4,444.75</td>
+      <td>444.48</td>
+      <td>70.00</td>
+      <td>3.33</td>
+      <td>10</td>
+      <td>-109.17</td>
+      <td>-2.46</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>ENI.MI</td>
+      <td>True</td>
+      <td>4</td>
+      <td>False</td>
+      <td>8</td>
+      <td>30</td>
+      <td>70</td>
+      <td>1,560.03</td>
+      <td>780.02</td>
+      <td>50.00</td>
+      <td>2.00</td>
+      <td>2</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>ENI.MI</td>
+      <td>True</td>
+      <td>3</td>
+      <td>False</td>
+      <td>8</td>
+      <td>30</td>
+      <td>70</td>
+      <td>-983.93</td>
+      <td>-122.99</td>
+      <td>50.00</td>
+      <td>2.00</td>
+      <td>8</td>
+      <td>-1,945.73</td>
+      <td>197.75</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>ENI.MI</td>
+      <td>True</td>
+      <td>2</td>
+      <td>False</td>
+      <td>8</td>
+      <td>30</td>
+      <td>70</td>
+      <td>-866.25</td>
+      <td>-66.63</td>
+      <td>61.54</td>
+      <td>2.60</td>
+      <td>13</td>
+      <td>-2,842.92</td>
+      <td>328.19</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+            </div>
+        </div> <!-- end of row-->
+
+
+        </br>
+
+        <!-- FOOTER -->
+        <footer class="col-lg-12">
+            <hr>
+            <p class="float-right"><a href="#">^top</a></p>
+            <p>&copy; 2024 <a href="https://surprisalx.com">surprisalx.com</a></p>
+        </footer>
+    </div><!-- /.container -->
+</main>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/6c6455c8f4.js" crossorigin="anonymous" SameSite="None"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script>
+        hljs.highlightAll();
+</script>
+<script>
+        $(document).ready(function () {
+            var tab = document.querySelector('table');
+            var t = $(tab).DataTable({
+                    "columnDefs": [
+                        {
+                            "targets": -1,
+                            "data": null,
+                            "defaultContent": '<button class="btn btn-outline-warning btn-sm"><i class="fas fa-download"></i></button>'
+                        }
+                    ]
+                });
+
+                t.on('click', 'button', function () {
+                    var rowData = t.row($(this).parents('tr')).data();
+                    downloadConfigFile(rowData);
+                });
+        });
+
+        function downloadConfigFile(content) {
+            var codeElement = document.querySelector('.language-json');
+            var jsonString = codeElement.innerText || codeElement.textContent;
+            try {
+                var jsonObject = JSON.parse(jsonString);
+                // Exclude optimize section
+                if ('optimize' in jsonObject) {
+                    delete jsonObject.optimize;
+                };
+                // mapping
+                jsonObject['strategy']['entry-pattern'] = parseInt(content[3]);
+                jsonObject['strategy']['trend-filter'] = (content[4].toLowerCase() === "true");
+                jsonObject['strategy']['rsi-period'] = parseInt(content[5]);
+                jsonObject['strategy']['rsi-low-level'] = parseInt(content[6]);
+                jsonObject['strategy']['rsi-high-level'] = parseInt(content[7]);
+
+            } catch (error) {
+                console.error('Errore nel parsing del JSON:', error);
+            }
+            var jsonString = JSON.stringify(jsonObject, null, 2);
+            var blob = new Blob([jsonString], { type: "application/json" });
+            var link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "StockMiner"+"_"+content[0]+"_"+content[1]+"_"+content[3]+"_"+content[4]+"_"+content[5]+"_"+content[6]+"_"+content[7]+".json";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+</script>
+</html>

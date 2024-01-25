@@ -29,4 +29,5 @@ n/a
 ## TODO LIST
 - Add commissions costs
 - Add reading of custom csv for historical data
-- A Complete Report for a Symbol
+- A Complete Report for a Symbol (html template)
+- Basket of systems ( generate report for single system and one full report with summarized equity line)

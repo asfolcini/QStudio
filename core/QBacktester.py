@@ -319,7 +319,7 @@ class QBacktester(object):
             print("Winning Rate       : {:.2f}".format((self.tot_trades_pos/self.tot_trades)*100), "%")
         print("--"*40)
         print("Standard Deviation : {:.2f}".format(self.stddev))
-        print("Max DrawDown       : {:.2f}".format(self.maxdd))
+        print("Max DrawDown       : {:.2f}".format(self.maxdd)+" ({:.2f}%)".format(self.maxdd_pct))
         print("Max Loss           : {:.2f}".format(self.maxloss))
         print("Max Win            : {:.2f}".format(self.maxwin))
         print("Average Loss       : {:.2f}".format(self.avgLoss))
@@ -337,6 +337,9 @@ class QBacktester(object):
 
             self.df['highvalue'] = self.df['cumpnl'].cummax()
             self.df['drawdown'] = self.df['cumpnl'] - self.df['highvalue']
+            self.df['drawdown_pct'] = (self.df['drawdown'] / self.df['highvalue']) * 100
+            self.maxdd = self.df['drawdown'].min()
+            self.maxdd_pct = self.df['drawdown_pct'].min()
 
             # STATS
             self.tot_trades = self.df['pnl'].count()
@@ -345,7 +348,7 @@ class QBacktester(object):
             self.pnl = self.df['pnl'].sum().round(2)
             self.average_trade = self.df['pnl'].mean().round(2)
             self.stddev = self.df['pnl'].std()
-            self.maxdd = self.df['drawdown'].min()
+
             self.maxloss = self.df['pnl'].min()
             self.maxwin = self.df['pnl'].max()
             self.avgLoss = self.df['pnl'][self.df['pnl'] < 0.0 ].mean()
@@ -354,10 +357,7 @@ class QBacktester(object):
                 self.profit_factor = self.tot_trades/self.tot_trades_neg
             else:
                 self.profit_factor = 0.0
-            if self.pnl != 0.0:
-                self.maxdd_pct = (self.maxdd / self.pnl) * 100
-            else:
-                self.maxdd_pct = 0.0
+
 
             if self.verbose: print(". backtest finished.")
             self.onStop()

@@ -63,8 +63,6 @@ class Miner_Strategy(QBacktester):
         sma = self.indicators['sma200'].tolist().pop()
         rsi = self.indicators['rsi'].tolist().pop()
 
-
-
         if self.trend_filter:
             trend_filter_condition = event.close > sma
         else:
@@ -80,14 +78,12 @@ class Miner_Strategy(QBacktester):
             exit_long_condition = (not trend_filter_condition) or rsi >= self.rsi_high_level
 
 
-
         if not self.atMarket and long_condition:
             if self.verbose: print("BUY "+str(event.symbol)+" at market "+str(event.date)+" qty="+str(self.quantity))
             self.atMarket = self.place_order(event, OrderType.MARKET, OrderSide.BUY, self.quantity)
         if self.atMarket and exit_long_condition:
             if self.verbose: print("SELL "+str(event.symbol)+" at market "+str(event.date)+" qty="+str(self.quantity))
             self.atMarket = not self.place_order(event, OrderType.MARKET, OrderSide.SELL, self.quantity)
-
 
 
 def strategy_execute(config_file=None, mode=ExecutionMode.BACKTEST):
