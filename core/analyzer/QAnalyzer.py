@@ -69,7 +69,7 @@ class Analyzer(object):
         pass
 
     def plot_equity(self, title=None):
-        self.df.dropna().plot(y=['cumpnl','drawdown'], kind='line', color=['green', 'red'], title='Equity '+str(title), figsize=(12,6))
+        self.df.fillna(method='ffill').plot(y=['cumpnl','drawdown'], kind='line', color=['green', 'red'], title='Equity '+str(title), figsize=(12,6))
         plt.axvspan(self.long_term_df.index[0], self.long_term_df.index[-1], color='grey', alpha=0.3)
         plt.axvspan(self.short_term_df.index[0], self.short_term_df.index[-1], color='green', alpha=0.3)
 
@@ -91,7 +91,8 @@ class Analyzer(object):
         # PROFIT FACTOR
         self.short_term_tot_trades = self.short_term_df['pnl'].dropna().count()
         self.short_term_tot_trades_neg = self.short_term_df['pnl'][self.short_term_df['pnl'] < 1.0 ].dropna().count()
-        self.short_term_pf = (self.short_term_tot_trades/self.short_term_tot_trades_neg).round(2)
+        if self.short_term_tot_trades_neg > 0:
+            self.short_term_pf = (self.short_term_tot_trades/self.short_term_tot_trades_neg).round(2)
         self.short_term_sr = (self.short_term_df['pnl'].mean()/self.short_term_df['pnl'].std())
         self.long_term_sr = (self.long_term_df['pnl'].mean()/self.long_term_df['pnl'].std())
 

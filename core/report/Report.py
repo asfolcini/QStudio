@@ -38,7 +38,7 @@ def save_strategy_equity(df, _name):
     #_df['pnl'] = _df['pnl'].fillna()
 
     lastupdate = cfg.OUTPUT_FILENAME
-    _f = cfg.OPTIMIZATION_REPORT_PATH+'/'+_name+'_'+lastupdate+"_eq.csv"
+    _f = cfg.EQUITY_OUTPUT+'/'+_name+'_'+lastupdate+"_eq.csv"
     _df.to_csv(_f, sep=cfg.CSV_SEPARATOR, header=False, index=False)
 
 

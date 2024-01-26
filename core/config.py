@@ -16,7 +16,6 @@ AUTHOR="Alberto Sfolcini <a.sfolcini@gmail.com>"
 # If true this will prints all the outputs.
 VERBOSE=False
 
-
 # Settign default pandas options
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', None)
@@ -38,8 +37,11 @@ SYMBOLS_FILEPATH = "./config/symbols"
 # Historical data repository path (with trailing /)
 DATA_REPOSITORY = "./data/"
 
+# Equities folder path
+EQUITY_OUTPUT = "./equities/"
+
 # Output repository path (with trailing /)
-OUTPUT_REPOSITORY="./output/"
+OUTPUT_REPOSITORY = "./output/"
 OUTPUT_FILENAME=datetime.now().strftime("%Y%m%dT%H%M%S")
 # MATHPLOT Style
 plt.style.use('fast')

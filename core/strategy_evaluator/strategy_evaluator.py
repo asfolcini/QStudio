@@ -3,6 +3,7 @@ import pandas as pd
 from core.analyzer.QAnalyzer import Analyzer
 from prettytable import PrettyTable
 from matplotlib import pyplot as plt
+import core.config as cfg
 
 def strategy_evaluator(folder, report=False, ):
     summary = [['filepath', 'strategy', 'status', 'sharpe_ratio_ann']]
@@ -15,8 +16,8 @@ def strategy_evaluator(folder, report=False, ):
             status, sr , df = check_single_strategy(f, strategy_name=sname)
             summary.append([f, sname, status, sr])
             if status == True and report:
-                plt.plot(df['cumpnl'], label=sname, linewidth=1)
-                plt.plot(df['drawdown'], linewidth=1, color='r')
+                plt.plot(df['cumpnl'].fillna(method='ffill'), label=sname, linewidth=1)
+                plt.plot(df['drawdown'].fillna(method='ffill'), linewidth=1, color='r')
 
 
     tab = PrettyTable(summary[0])
@@ -68,6 +69,10 @@ def check_single_strategy(filepath, strategy_name='strategy', _chart=False):
     a = Analyzer(df)
     #a.get_stats_report()
     status, tab, sr = a.validate(title=strategy_name)
+
+    print("------ EVALUATION SETTINGS ------")
+    print("Long  Term periods:", cfg.STRATEGY_EVALUATOR_LONG_TERM)
+    print("Short Term periods:", cfg.STRATEGY_EVALUATOR_SHORT_TERM)
 
     print(tab)
     if _chart:
