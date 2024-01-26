@@ -8,7 +8,7 @@ from datetime import datetime
 import pandas as pd
 
 # QStudio version
-VERSION = "v0.3.5"
+VERSION = "v0.3.8"
 
 # Author
 AUTHOR="Alberto Sfolcini <a.sfolcini@gmail.com>"
@@ -21,12 +21,16 @@ VERBOSE=False
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', None)
 
+# CSV SEPARATOR
+CSV_SEPARATOR = ","
 
 # Online QStudio Docuemntation
-ONLINE_DOCS_URL = "https://github.com/asfolcini/QStudio/blob/main/docs/index.md"
+ONLINE_DOCS_URL = "https://surprisalx.com/qstudio/"
 
 # Check strategy url
-CHECK_STRATEGY_HELP_URL = "https://github.com/asfolcini/QStudio/blob/main/docs/strategy_equity_check.md"
+CHECK_STRATEGY_HELP_URL = "https://surprisalx.com/qstudio/index.php?s=2.8%20Strategy%20Evaluator"
+STRATEGY_EVALUATOR_LONG_TERM = 378   # 18 months
+STRATEGY_EVALUATOR_SHORT_TERM = 63   # 3 months
 
 # File that contains the symbol list separated by comma
 SYMBOLS_FILEPATH = "./config/symbols"

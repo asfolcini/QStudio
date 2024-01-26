@@ -17,11 +17,16 @@ from core.Order import Order, OrderSide, OrderStatus, OrderType
 from core.Position import Position, PositionStatus, PositionSide
 from core.telegram_bot import Telegram_Message
 from enum import Enum
+import core.report.Report as report
+
+
 
 class ExecutionMode(Enum):
     BACKTEST = '--backtest'
     SIGNAL = '--signal'
     OPTIMIZE = '--optimize'
+
+
 
 
 class QBacktester(object):

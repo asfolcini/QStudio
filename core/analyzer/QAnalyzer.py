@@ -1,7 +1,7 @@
 import pandas as pd
 from matplotlib import pyplot as plt
 from prettytable import PrettyTable
-
+import core.config as cfg
 
 class Analyzer(object):
 
@@ -16,16 +16,20 @@ class Analyzer(object):
         self.df['drawdown'] = self.df['cumpnl'] - self.df['highvalue']
 
         # STATS
-        self.tot_trades = self.df['pnl'].count()
-        self.tot_trades_neg = self.df['pnl'][self.df['pnl'] < 1.0 ].count()
-        self.tot_trades_pos = self.df['pnl'][self.df['pnl'] > 1.0 ].count()
-        self.pnl = self.df['pnl'].sum().round(2)
-        self.average_trade = self.df['pnl'].mean().round(2)
-        self.stddev = self.df['pnl'].std()
-        self.maxdd = self.df['drawdown'].min()
-        self.maxloss = self.df['pnl'].min()
-        self.maxwin = self.df['pnl'].max()
-        self.avgLoss = self.df['pnl'][self.df['pnl'] < 0.0 ].mean()
+        self.tot_trades = self.df['pnl'].dropna().count()
+        self.tot_trades_neg = self.df['pnl'][self.df['pnl'] < 1.0 ].dropna().count()
+        self.tot_trades_pos = self.df['pnl'][self.df['pnl'] > 1.0 ].dropna().count()
+        self.pnl = self.df['pnl'].round(2).sum()
+        self.average_trade = self.df['pnl'].round(2).mean()
+        self.stddev = self.df['pnl'].round(2).std()
+        self.maxdd = self.df['drawdown'].round(2).min()
+
+        self.df['drawdown_pct'] = (self.df['drawdown'] / self.df['highvalue']) * 100
+        self.maxdd_pct = self.df['drawdown_pct'].round(2).min()
+
+        self.maxloss = self.df['pnl'].round(2).min()
+        self.maxwin = self.df['pnl'].round(2).max()
+        self.avgLoss = self.df['pnl'][self.df['pnl'] < 0.0 ].round(2).mean()
         pass
 
     def get_yields_by_year(self):
@@ -35,8 +39,10 @@ class Analyzer(object):
         return _df
 
     def get_stats_report(self):
-        self.profit_factor = self.tot_trades/self.tot_trades_neg
-        self.sharpe_ratio = self.pnl.mean()/self.pnl.std()
+        if self.tot_trades_neg > 0:
+            self.profit_factor = self.tot_trades/self.tot_trades_neg
+        if self.pnl.std() > 0:
+            self.sharpe_ratio = self.pnl.mean()/self.pnl.std()
         print("--"*40)
         print("STRATEGY STATISTICS")
         print("--"*40)
@@ -63,7 +69,7 @@ class Analyzer(object):
         pass
 
     def plot_equity(self, title=None):
-        self.df.plot(y=['cumpnl','drawdown'], kind='line', color=['green', 'red'], title='Equity '+str(title), figsize=(12,6))
+        self.df.dropna().plot(y=['cumpnl','drawdown'], kind='line', color=['green', 'red'], title='Equity '+str(title), figsize=(12,6))
         plt.axvspan(self.long_term_df.index[0], self.long_term_df.index[-1], color='grey', alpha=0.3)
         plt.axvspan(self.short_term_df.index[0], self.short_term_df.index[-1], color='green', alpha=0.3)
 
@@ -71,7 +77,7 @@ class Analyzer(object):
         plt.show()
         pass
 
-    def validate(self, long_term_periods=378, short_term_periods=63, title='STRATEGY'):
+    def validate(self, long_term_periods=cfg.STRATEGY_EVALUATOR_LONG_TERM, short_term_periods=cfg.STRATEGY_EVALUATOR_SHORT_TERM, title='STRATEGY'):
         """ Default long_term is 18months,
             default short_term is 3months
             returns status boolean
@@ -83,8 +89,8 @@ class Analyzer(object):
         self.pnl_short_term = self.short_term_df['pnl'].sum()
 
         # PROFIT FACTOR
-        self.short_term_tot_trades = self.short_term_df['pnl'].count()
-        self.short_term_tot_trades_neg = self.short_term_df['pnl'][self.short_term_df['pnl'] < 1.0 ].count()
+        self.short_term_tot_trades = self.short_term_df['pnl'].dropna().count()
+        self.short_term_tot_trades_neg = self.short_term_df['pnl'][self.short_term_df['pnl'] < 1.0 ].dropna().count()
         self.short_term_pf = (self.short_term_tot_trades/self.short_term_tot_trades_neg).round(2)
         self.short_term_sr = (self.short_term_df['pnl'].mean()/self.short_term_df['pnl'].std())
         self.long_term_sr = (self.long_term_df['pnl'].mean()/self.long_term_df['pnl'].std())
@@ -95,8 +101,9 @@ class Analyzer(object):
 
         table = [['', 'Full Term', 'Long Term', 'Short Term'],
                  ['PnL', self.pnl.round(2), self.pnl_long_term.round(2), self.pnl_short_term.round(2)],
-                 ['Drawdown', self.maxdd, self.long_term_df['drawdown'].min(), self.short_term_df['drawdown'].min()],
-                 ['Avg Trade', self.average_trade, self.long_term_df['pnl'].mean().round(2), self.short_term_df['pnl'].mean().round(2)],
+                 ['Drawdown', self.maxdd, self.long_term_df['drawdown'].round(2).min(), self.short_term_df['drawdown'].round(2).min()],
+                 ['DD %', self.maxdd_pct, self.long_term_df['drawdown_pct'].round(2).min(), self.short_term_df['drawdown_pct'].round(2).min()],
+                 ['Avg Trade', self.average_trade.round(2), self.long_term_df['pnl'].mean().round(2), self.short_term_df['pnl'].mean().round(2)],
                  ]
         tab = PrettyTable(table[0])
         tab.title = str(title)+str(" [status:"+str("ACTIVE" if status else "STOPPED")+"]")

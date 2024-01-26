@@ -1,6 +1,6 @@
 {
-  "name": "ENI_Miner",
-  "symbols": "ENI.MI",
+  "name": "StockMiner",
+  "symbols": "BAMI.MI",
   "quantity": 1000,
 
   "strategy": {
@@ -17,7 +17,7 @@
 
   "backtest-data": {
     "from": "2000-01-01 00:00:00",
-    "to": "2025-01-01 00:00:00"
+    "to": "2021-01-01 00:00:00"
   },
 
   "optimize": {

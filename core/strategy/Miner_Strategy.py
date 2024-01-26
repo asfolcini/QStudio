@@ -3,8 +3,6 @@
 # (c) Alberto Sfolcini <a.sfolcini@gmail.com>
 # www.surprisalx.com
 #=======================================================================================================================
-import datetime
-
 from core.Order import OrderType, OrderSide
 from core.QBacktester import QBacktester
 from core.Candle import Candle
@@ -14,10 +12,10 @@ from core.QBacktester import ExecutionMode
 import pandas
 import time
 import json
-import core.patterns.filter_patterns as patterns
 from core.Datahub import Datahub
 import pandas_ta as pta
 import core.utils as utils
+
 
 class Miner_Strategy(QBacktester):
     """
@@ -214,6 +212,7 @@ def strategy_execute(config_file=None, mode=ExecutionMode.BACKTEST):
                 x.plot_yield_by_years()
                 #x.plot_yield_by_yearsmonths()
                 x.show_historical_positions(20)
+                Report.save_strategy_equity(x.df, _name+str(s))
             else:
                 x.show_target_portfolio()
 

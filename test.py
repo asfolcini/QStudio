@@ -39,3 +39,24 @@ from core.telegram_bot import Telegram_Message
 #tm = Telegram_Message()
 #tm.send_message('Messaggio di test')
 
+
+import pandas as pd
+
+# Creare un DataFrame di esempio con buchi nelle date
+data = {'Data': ['2022-01-01', '2022-01-02', '2022-01-05', '2022-01-06'],
+        'Valore': [10, 15, 25, 30]}
+
+df = pd.DataFrame(data)
+
+# Convertire la colonna 'Data' in tipo datetime
+df['Data'] = pd.to_datetime(df['Data'])
+
+# Creare un indice con tutte le date desiderate
+date_complete = pd.date_range(start=df['Data'].min(), end=df['Data'].max(), freq='D')
+df = df.set_index('Data').reindex(date_complete).reset_index()
+
+# Riempire i buchi con i valori precedenti
+df['Valore'] = df['Valore'].fillna(method='ffill')
+
+# Stampare il DataFrame risultante
+print(df)
