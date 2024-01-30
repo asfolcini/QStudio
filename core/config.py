@@ -8,7 +8,7 @@ from datetime import datetime
 import pandas as pd
 
 # QStudio version
-VERSION = "v0.3.8"
+VERSION = "v0.4.0"
 
 # Author
 AUTHOR="Alberto Sfolcini <a.sfolcini@gmail.com>"
@@ -19,6 +19,7 @@ VERBOSE=False
 # Settign default pandas options
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', None)
+pd.set_option('display.max_rows', None)
 
 # CSV SEPARATOR
 CSV_SEPARATOR = ","

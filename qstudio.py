@@ -171,7 +171,7 @@ def chart(_symbols, show=True, _periods=9999, candles=False):
         c.generate_line(_periods)
 
 
-def random_equity(folder="./equities/", nr=1):
+def random_equity(folder=cfg.EQUITY_OUTPUT, nr=1):
     header()
     today = datetime.date.today()
     # generate random equities
@@ -184,7 +184,7 @@ def random_equity(folder="./equities/", nr=1):
     return
 
 
-def random_equity_delete(folder="./equities/"):
+def random_equity_delete(folder=cfg.EQUITY_OUTPUT):
     header()
     print("Cleaning folder "+str(folder))
     for filename in os.listdir(folder):
@@ -202,14 +202,14 @@ def check_strategy_help():
     return
 
 
-def check_strategy(folder="./equities/", report=False):
+def check_strategy(folder=cfg.EQUITY_OUTPUT, report=False):
     header()
     print("Check Strategy in folder "+str(folder))
     cs.strategy_evaluator(folder, report)
     return
 
 
-def check_single_strategy(equity_filepath="./equities/", report=False):
+def check_single_strategy(equity_filepath=cfg.EQUITY_OUTPUT, report=False):
     header()
     print("Check single Strategy with equity file: "+str(equity_filepath))
     cs.check_single_strategy(equity_filepath, equity_filepath, report)
@@ -258,10 +258,9 @@ def hack_opt(_symbols, _qty, _mean_reverting=True, _trend_filter=False, _entry_p
         x.set_trend_filter(_trend_filter)
         x.set_entry_pattern(_entry_pattern)
         x.run()
-        x.get_stats_report()
+        x.report_statistics()
         x.plot_equity()
-        x.plot_yield_by_years()
-        # x.plot_yield_by_yearsmonths()
+        x.plot_yields_by_years()
         x.show_historical_positions(20)
 
     return

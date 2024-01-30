@@ -11,13 +11,15 @@ from matplotlib import pyplot as plt
 
 
 import core.config
+from core.QStats import QStats
+from core.QPlot import QPlot
 from core.Candle import Candle
 from core.Datahub import Datahub
 from core.Order import Order, OrderSide, OrderStatus, OrderType
 from core.Position import Position, PositionStatus, PositionSide
 from core.telegram_bot import Telegram_Message
 from enum import Enum
-import core.report.Report as report
+from core.report import Report
 
 
 
@@ -32,7 +34,7 @@ class ExecutionMode(Enum):
 class QBacktester(object):
 
     telegram_bot = Telegram_Message(core.config.TELEGRAM_BOT_TOKEN, core.config.TELEGRAM_CHANNEL_ID)
-
+    qplot = QPlot()
     def __init__(self, strategy_name, symbol):
         self.portfolio = []
         self.orders    = []
@@ -251,44 +253,6 @@ class QBacktester(object):
         return tp
 
 
-    def plot_equity(self):
-        if not self.df.empty:
-            self.df.plot(x='open_date', y=['cumpnl','drawdown'], kind='line', color=['green','red'], title='Equity '+str(self.strategy_name))
-            plt.grid()
-            plt.show()
-
-
-    def get_yields_by_year(self):
-        if not self.df.empty:
-            _df = self.df
-            _df['year'] = _df['open_date'].dt.year
-            _df = _df[['year', 'pnl']].groupby(['year'], sort=False).sum().sort_index()
-            return _df
-        else:
-            return pandas.DataFrame()
-
-    def get_yields_by_yearsmonths(self):
-        _df = self.df
-        _df['yearmonth'] = _df['open_date'].dt.strftime("%Y-%m")
-        _df = _df[['yearmonth', 'pnl']].groupby(['yearmonth'], sort=False).sum().sort_index()
-        return _df
-
-    def plot_yield_by_yearsmonths(self):
-        _df = self.get_yields_by_yearsmonths()
-        _df.plot.bar(y=['pnl'], color='cornflowerblue')
-        for ym,pnl in _df.iterrows():
-            print("Year/Month : ",ym,"     PnL : {:.2f}".format(float(pnl)))
-        plt.grid()
-        plt.show()
-
-    def plot_yield_by_years(self):
-        if not self.df.empty:
-            _df = self.get_yields_by_year()
-            _df.plot.bar(y=['pnl'], color='cornflowerblue')
-            plt.grid()
-            plt.show()
-
-
     def show_historical_positions(self, last_position_nr=999999):
         """
         Prints Historical Positions
@@ -308,79 +272,43 @@ class QBacktester(object):
         """
         return self.portfolio
 
-    def get_stats_report(self):
-        print("--"*40)
-        print("STRATEGY STATISTICS")
-        print("--"*40)
-        print("Total Profit       : {:.2f}".format(self.pnl))
-        print("Average Trade      : {:.2f}".format(self.average_trade))
-        print("--"*40)
-        print("Nr Trades          : ", self.tot_trades)
-        print("Nr Positive Trades : ", self.tot_trades_pos)
-        print("Nr Negative Trades : ", self.tot_trades_neg)
-        if self.tot_trades_neg>0:
-            print("Profit Factor      : {:.2f}".format(self.tot_trades/self.tot_trades_neg))
-        if self.tot_trades>0:
-            print("Winning Rate       : {:.2f}".format((self.tot_trades_pos/self.tot_trades)*100), "%")
-        print("--"*40)
-        print("Standard Deviation : {:.2f}".format(self.stddev))
-        print("Max DrawDown       : {:.2f}".format(self.maxdd)+" ({:.2f}%)".format(self.maxdd_pct))
-        print("Max Loss           : {:.2f}".format(self.maxloss))
-        print("Max Win            : {:.2f}".format(self.maxwin))
-        print("Average Loss       : {:.2f}".format(self.avgLoss))
-        print("--"*40)
-        _df = self.get_yields_by_year()
-        for year, pnl in _df.iterrows():
-            print("Year ",year,"        : {:.2f}".format(float(pnl)))
-        print("--"*40)
-        pass
 
     def __stop(self):
         self.df = pandas.DataFrame(p.__dict__ for p in self.portfolio)
-        if not self.df.empty:
-            self.df['cumpnl'] = self.df['pnl'].cumsum().round(2)
+        self.qstat = QStats(self.df)
 
-            self.df['highvalue'] = self.df['cumpnl'].cummax()
-            self.df['drawdown'] = self.df['cumpnl'] - self.df['highvalue']
-            self.df['drawdown_pct'] = (self.df['drawdown'] / self.df['highvalue']) * 100
-            self.maxdd = self.df['drawdown'].min()
-            self.maxdd_pct = self.df['drawdown_pct'].min()
-
-            # STATS
-            self.tot_trades = self.df['pnl'].count()
-            self.tot_trades_neg = self.df['pnl'][self.df['pnl'] < 1.0 ].count()
-            self.tot_trades_pos = self.df['pnl'][self.df['pnl'] > 1.0 ].count()
-            self.pnl = self.df['pnl'].sum().round(2)
-            self.average_trade = self.df['pnl'].mean().round(2)
-            self.stddev = self.df['pnl'].std()
-
-            self.maxloss = self.df['pnl'].min()
-            self.maxwin = self.df['pnl'].max()
-            self.avgLoss = self.df['pnl'][self.df['pnl'] < 0.0 ].mean()
-            self.winrate = (self.tot_trades_pos/self.tot_trades)*100
-            if self.tot_trades_neg > 0:
-                self.profit_factor = self.tot_trades/self.tot_trades_neg
-            else:
-                self.profit_factor = 0.0
-
-
-            if self.verbose: print(". backtest finished.")
-            self.onStop()
-        else:
-            self.tot_trades = 0
-            self.tot_trades_neg = 0
-            self.tot_trades_pos = 0
-            self.pnl = 0.0
-            self.average_trade = 0.0
-            self.stddev = 0.0
-            self.maxdd = 0.0
-            self.maxdd_pct = 0.0
-            self.maxloss = 0.0
-            self.maxwin = 0.0
-            self.avgLoss = 0.0
-            self.winrate = 0.0
-            self.profit_factor = 0.0
+        if self.verbose: print(". backtest finished.")
+        self.onStop()
         pass
+
+
+    def report_statistics(self):
+        '''
+        Prints report statistics
+        :return:
+        '''
+        self.qstat.get_stats_report()
+
+    def plot_equity(self):
+        '''
+        Plots Strategy Equity
+        :return:
+        '''
+        self.qplot.plot_equity(self.qstat.get_equity_data(), self.strategy_name)
+
+    def plot_yields_by_years(self):
+        '''
+        Plots yields by y
+        :return:
+        '''
+        self.qplot.plot_yields_by_years(self.qstat.get_yields_by_year(), self.strategy_name)
+
+    def plot_yields_by_months(self):
+        self.qplot.plot_yields_by_months(self.qstat.get_yields_by_months(), self.strategy_name)
+
+    def save_equity_data(self):
+        Report.save_strategy_equity(self.df, self.strategy_name)
+
 
     def build_target_portfolio_message(self, title=None):
         sep = "--"*40

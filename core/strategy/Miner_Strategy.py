@@ -207,12 +207,12 @@ def strategy_execute(config_file=None, mode=ExecutionMode.BACKTEST):
             x.set_rsi_high_level(_rsi_high_level)
             x.run()
             if mode == ExecutionMode.BACKTEST:
-                x.get_stats_report()
+                x.report_statistics()
                 x.plot_equity()
-                x.plot_yield_by_years()
-                #x.plot_yield_by_yearsmonths()
+                x.plot_yields_by_years()
+                #x.plot_yields_by_months()
                 x.show_historical_positions(20)
-                Report.save_strategy_equity(x.df, _name)
+                x.save_equity_data()
             else:
                 x.show_target_portfolio()
 

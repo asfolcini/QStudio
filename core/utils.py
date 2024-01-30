@@ -5,6 +5,7 @@
 #=======================================================================================================================
 from core import Candle
 import time
+import pandas as pd
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Load content from text file and return it
@@ -13,6 +14,7 @@ def load_from_file(filepath):
     with open(filepath) as f:
         content = f.read()
     return content
+
 
 def get_formatted_time(start_time):
     end_time = time.time()

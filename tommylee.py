@@ -12,7 +12,7 @@
 import pandas
 import sys
 import core.strategy.ToM_Strategy
-
+import core.report.Report as report
 
 def main():
     """
@@ -83,12 +83,12 @@ def run_backtest(symbol, qty=100, mode='BACKTEST', _sma_filter=False,verbose=Fal
     s.set_verbose(verbose)
     s.run()
     if mode == 'BACKTEST':
-        s.get_stats_report()
+        s.report_statistics()
         s.plot_equity()
-        s.plot_yield_by_years()
-        #s.plot_yield_by_yearsmonths()
-        s.show_historical_positions(10)
-
+        s.plot_yields_by_years()
+        s.plot_yields_by_months()
+        s.show_historical_positions(20)
+        s.save_equity_data()
 
 def run_optimize(symbol,qty=100, _sma_filter=False, verbose=False):
     _data = []

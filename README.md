@@ -28,7 +28,7 @@ n/a
 
 ## TODO LIST
 - Add commissions costs
+- Add Stop Loss
 - Add reading of custom csv for historical data
 - A Complete Report for a Symbol (html template)
-- Basket of systems ( generate report for single system and one full report with summarized equity line)
-  Have a directory with all backtested systems (html list), for each backtested generate a compositive equity with summ values
+- Fix strategy Evaluator for (portfolio equity, separate funciton)
