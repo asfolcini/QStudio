@@ -292,7 +292,7 @@ def hack(_symbols, _qty=100, _mean_reverting=None):
                         x.set_trend_filter(trend_filter)
                         x.set_entry_pattern(entry_pattern)
                         x.run()
-                        _data.append([x.symbol, mtype, entry_pattern, trend_filter, x.pnl, x.average_trade, x.tot_trades, x.maxdd])
+                        _data.append([x.symbol, mtype, entry_pattern, trend_filter, x.qstat.pnl, x.qstat.average_trade, x.qstat.tot_trades, x.qstat.maxdd])
                 else:
                     if _mean_reverting:
                         mtype = "Mean-Reverting"
@@ -306,7 +306,7 @@ def hack(_symbols, _qty=100, _mean_reverting=None):
                     x.set_trend_filter(trend_filter)
                     x.set_entry_pattern(entry_pattern)
                     x.run()
-                    _data.append([x.symbol, mtype, entry_pattern, trend_filter, x.pnl, x.average_trade, x.tot_trades, x.maxdd])
+                    _data.append([x.symbol, mtype, entry_pattern, trend_filter, x.qstat.pnl, x.qstat.average_trade, x.qstat.tot_trades, x.qstat.maxdd])
 
     opt = pandas.DataFrame(_data, columns=['Symbol', 'Strategy Type', 'Entry Pattern', 'Trend Filter', 'pnl', 'avgtrade', '#Trades', 'maxdd'])
     opt = opt.sort_values(['avgtrade', 'pnl', '#Trades'], ascending=False)

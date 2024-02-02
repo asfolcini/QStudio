@@ -105,9 +105,9 @@ def run_optimize(symbol,qty=100, _sma_filter=False, verbose=False):
             s.set_verbose(verbose)
             s.run()
 
-            print("Entry day: "+str(entry_day)+" Exit day: "+str(exit_day)+" ===> PnL:"+str(s.pnl)+" AvgTrade:"+str(s.average_trade)+ " MaxDD:"+str(s.maxdd))
+            print("Entry day: "+str(entry_day)+" Exit day: "+str(exit_day)+" ===> PnL:"+str(s.qstat.pnl)+" AvgTrade:"+str(s.qstat.average_trade)+ " MaxDD:"+str(s.qstat.maxdd))
 
-            _data.append([entry_day, exit_day, s.pnl, s.average_trade, s.maxdd])
+            _data.append([entry_day, exit_day, s.qstats.pnl, s.qstat.average_trade, s.qstat.maxdd])
 
     opt = pandas.DataFrame(_data, columns=['EntryDay','ExitDay','pnl','avgtrade','maxdd'])
     opt = opt.sort_values(['avgtrade','pnl','maxdd'], ascending=False)

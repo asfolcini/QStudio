@@ -176,10 +176,10 @@ def strategy_execute(config_file=None, mode=ExecutionMode.BACKTEST):
                                 x.set_rsi_period(opt_rsi_period)
                                 x.run()
                                 _opt_data.append([x.symbol, _mean_reverting, opt_entry_pattern, opt_trend_filter,
-                                                  opt_rsi_period, opt_rsi_low_level, opt_rsi_high_level, '{:,}'.format(x.pnl),
-                                                  '{:,}'.format(x.average_trade), "{:.2f}".format(x.winrate),
-                                                  "{:.2f}".format(x.profit_factor), x.tot_trades, '{:,.2f}'.format(x.maxdd),
-                                                  '{:,.2f}'.format(x.maxdd_pct)])
+                                                  opt_rsi_period, opt_rsi_low_level, opt_rsi_high_level, '{:,}'.format(x.qstat.pnl),
+                                                  '{:,}'.format(x.qstat.average_trade), "{:.2f}".format(x.qstat.winrate),
+                                                  "{:.2f}".format(x.qstat.profit_factor), x.qstat.tot_trades, '{:,.2f}'.format(x.qstat.maxdd),
+                                                  '{:,.2f}'.format(x.qstat.maxdd_pct)])
 
             opt = pandas.DataFrame(_opt_data, columns=['symbol', 'mean-reverting', 'entry_pattern', 'trend_filter',
                                                        'rsi_period', 'rsi_low', 'rsi_high', 'pnl', 'avgtrade',
