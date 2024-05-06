@@ -8,6 +8,8 @@
 #   - Optimize the strategy
 #       python3 bias_study.py --optimize SPY5.DE 50 --sma-filter-off
 # ------------------------------------------------------------------------------------------------------------ #
+import sys
+sys.path.append("..")
 
 import pandas
 from core.strategy.Bias_Study import Bias_Study

@@ -41,20 +41,5 @@ from core.telegram_bot import Telegram_Message
 #tm.send_message('Messaggio di test')
 
 
-import pandas as pd
+print ("-----------------------------------")
 
-# Creare un DataFrame di esempio con buchi nelle date
-data1 = {'date': ['2022-01-01', '2022-01-02', '2022-01-05', '2022-01-06'],
-        'pnl': [10, 15, 25, 30]}
-data2 = {'date': ['2022-01-01'],
-         'pnl': [2.5]}
-
-df1 = pd.DataFrame(data1)
-df2 = pd.DataFrame(data2)
-
-df_merged = util.merge_dataframes(df1, df2)
-
-print(df1)
-print(df2)
-# Stampare il DataFrame risultante
-print(df_merged)

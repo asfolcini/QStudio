@@ -7,6 +7,10 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 import pandas as pd
 
+import os
+current_file_dir = os.path.dirname(__file__)
+PROJECT_DIR = os.path.abspath(os.path.join(current_file_dir, os.pardir))
+
 # QStudio version
 VERSION = "v0.4.0"
 
@@ -33,21 +37,21 @@ STRATEGY_EVALUATOR_LONG_TERM = 378   # 18 months
 STRATEGY_EVALUATOR_SHORT_TERM = 63   # 3 months
 
 # File that contains the symbol list separated by comma
-SYMBOLS_FILEPATH = "./config/symbols"
+SYMBOLS_FILEPATH = PROJECT_DIR + "/config/symbols"
 
 # Historical data repository path (with trailing /)
-DATA_REPOSITORY = "./data/"
+DATA_REPOSITORY = PROJECT_DIR + "/data/"
 
 # Equities folder path
-EQUITY_OUTPUT = "./equities/"
+EQUITY_OUTPUT = PROJECT_DIR + "/equities/"
 
 # Output repository path (with trailing /)
-OUTPUT_REPOSITORY = "./output/"
+OUTPUT_REPOSITORY = PROJECT_DIR + "/output/"
 OUTPUT_FILENAME=datetime.now().strftime("%Y%m%dT%H%M%S")
 # MATHPLOT Style
 plt.style.use('fast')
 
-OPTIMIZATION_REPORT_TEMPLATE = "./config/optimization_report_template.html"
+OPTIMIZATION_REPORT_TEMPLATE = PROJECT_DIR + "/config/optimization_report_template.html"
 OPTIMIZATION_REPORT_PATH = OUTPUT_REPOSITORY+"optimization_reports"
 
 # Telegram channel instant messanger

@@ -8,16 +8,16 @@
     "_type-comment": "Allow values: mean-reverting, trend-following",
     "engine": "RSI_base",
     "_engine_comment": "Allow values: RSI_base",
-    "rsi-period": 8,
-    "rsi-low-level": 30,
+    "rsi-period": 10,
+    "rsi-low-level": 35,
     "rsi-high-level": 70,
     "trend-filter": false,
-    "entry-pattern": 5
+    "entry-pattern": 6
   },
 
   "backtest-data": {
     "from": "2000-01-01 00:00:00",
-    "xto": "2021-01-01 00:00:00"
+    "to": "2021-01-01 00:00:00"
   },
 
   "optimize": {
