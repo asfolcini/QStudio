@@ -99,7 +99,8 @@ class Datahub:
             ds['Date'] = ds['Date'].dt.strftime('%Y-%m-%d')
             ds.to_csv(fp, index=False)
             out = ds['Date'].tail(1)
-            return True, out.values
+            # Return just the date value, not the array representation
+            return True, out.iloc[0] if len(out) > 0 else "No data"
         except:
             return False
 
@@ -113,7 +114,7 @@ class Datahub:
 
             res, data = self.download_data(symbol)
             if res:
-                print("done {}".format(data))
+                print("done")
             else:
                 print("FAILED!")
 

@@ -1,0 +1,11 @@
+# Minimal requirements for QStudio - extracted from actual usage
+pandas>=1.5.0
+numpy>=1.24.0
+matplotlib>=3.7.0
+plotly>=5.13.0
+yfinance>=0.2.12
+names>=0.3.0
+scipy>=1.10.0
+seaborn>=0.12.0
+statsmodels>=0.13.0
+colorama>=0.4.0

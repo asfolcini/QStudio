@@ -21,6 +21,13 @@ from core.strategy.Miner_Strategy import strategy_execute
 import pandas
 from core.QBacktester import ExecutionMode
 
+# Import menu interface
+try:
+    import menu_interface
+except ImportError:
+    # If menu_interface is not available, continue without it
+    pass
+
 
 def datahub_update_all():
     """
@@ -322,6 +329,16 @@ def main():
     """
     args = sys.argv[1:]
 
+    # Check if menu interface is requested
+    if len(args) == 1 and args[0] == '--menu':
+        try:
+            menu_interface.run_menu_interface()
+            return
+        except ImportError:
+            print("Menu interface not available. Please ensure menu_interface.py is in the correct location.")
+            usage()
+            return
+
     """
     ONLINE DOCUMENTATION
     """
@@ -443,7 +460,7 @@ def main():
             yields_weekly(args[2], True, int(args[4]))
             return
     if len(args) == 6 and args[0] == '--yields_weekly' and args[3] == '--periods' and args[5] == '--save':
-        if args[1] == '--symbols' and args[2] != '' and args[4] != '':
+        if args[1] == '--symbols' and args[2] != '':
             yields_weekly(args[2], False, int(args[4]))
             return
     """
@@ -745,6 +762,7 @@ def usage():
     print(" USAGE")
     # USAGE
     print(" --help                      : usage instructions")
+    print(" --menu                      : run QStudio with menu interface")
     print(" --documentation             : open online documentation")
 
 
