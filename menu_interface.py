@@ -5,6 +5,8 @@
 # =======================================================================================================================
 import sys
 import os
+import json
+import requests
 import core.config as cfg
 from core.Datahub import Datahub
 from core.correlation_matrix.CorrelationMatrix import CorrelationMatrix
@@ -64,6 +66,7 @@ def display_main_menu():
         print(Fore.YELLOW + "4. Strategy Analysis" + Style.RESET_ALL)
         print(Fore.RED + "5. Utilities" + Style.RESET_ALL)
         print(Fore.CYAN + "6. Documentation" + Style.RESET_ALL)
+        print(Fore.MAGENTA + "9. Configuration" + Style.RESET_ALL)
         print(Fore.RED + "0. Exit" + Style.RESET_ALL)
         print(Fore.CYAN + "-" * 50 + Style.RESET_ALL)
     else:
@@ -75,6 +78,7 @@ def display_main_menu():
         print("4. Strategy Analysis")
         print("5. Utilities")
         print("6. Documentation")
+        print("9. Configuration")
         print("0. Exit")
         print("=" * 50)
 
@@ -302,15 +306,91 @@ def handle_market_behavior_detection():
     input("\nPress Enter to continue...")
 
 def handle_technical_report():
-    """Handle technical report operations"""
+    """Handle technical report operations using AI-powered analysis"""
     try:
-        # Get input parameters
-        main_symbol = get_user_input("Enter main symbol (e.g., AAPL): ").upper().strip()
-        benchmark_symbol = get_user_input("Enter benchmark symbol (e.g., SPY): ").upper().strip()
+        # Get input parameter
+        ticker = get_user_input("Enter ticker symbol (e.g., AAPL): ").upper().strip()
         
-        if not main_symbol or not benchmark_symbol:
-            display_error("Both symbols are required.")
+        if not ticker:
+            display_error("Ticker symbol is required.")
             input("\nPress Enter to continue...")
+            return
+            
+        display_info(f"Generating AI-powered technical report for {ticker}...")
+        
+        # Load data using Datahub
+        s = Datahub(loadfromconfig=True)
+        
+        # Check if data exists for the ticker
+        if ticker not in s.get_symbols():
+            # Try to load the data directly
+            try:
+                dataset = s.load_data(ticker, 90)  # Load last 90 days of data
+                if dataset.empty:
+                    display_error(f"No data available for {ticker}.")
+                    input("\nPress Enter to continue...")
+                    return
+            except:
+                display_error(f"Failed to load data for {ticker}. Please make sure the ticker is valid and data is available.")
+                input("\nPress Enter to continue...")
+                return
+        else:
+            dataset = s.load_data(ticker, 90)  # Load last 90 days of data
+            
+        if dataset.empty:
+            display_error(f"No data available for {ticker}.")
+            input("\nPress Enter to continue...")
+            return
+        
+        # Import QuantTechAnalyzer
+        from core.quant_tech_analyzer import QuantTechAnalyzer
+        
+        # Create analyzer instance
+        analyzer = QuantTechAnalyzer()
+        
+        # Generate AI-powered report
+        result = analyzer.analyze(ticker, dataset)
+        
+        # Display the report
+        clear_screen()
+        display_header()
+        print(f"\n\U0001f4c8 AI-POWERED TECHNICAL REPORT: {ticker}")
+        print("=" * 70)
+        
+        # Display features
+        features = result["features"]
+        print("1. KEY METRICS")
+        print(f"   • Last Price: ${features['last_price']:.2f}")
+        print(f"   • 1D Return: {features['ret_1d']:.2%}")
+        print(f"   • 5D Return: {features['ret_5d']:.2%}")
+        print(f"   • RSI: {features['rsi']:.1f}")
+        print(f"   • Volatility: {features['volatility']:.2%} (20-day)")
+        print(f"   • Trend: {features['trend'].upper()}")
+        print(f"   • Quant Score: {features['quant_score']:.2f}")
+        
+        # Display AI-generated report
+        print("\n2. AI ANALYSIS")
+        print("\033[94m" + "\U0001f916 AI-GENERATED CONTENT" + "\033[0m")  # Blue text with robot emoji
+        print("-" * 70)
+        print(result["llm_report"])
+        print("-" * 70)
+        
+        print("\n" + "=" * 70)
+        display_success("AI-powered technical report generated successfully!")
+        input("\nPress Enter to continue...")
+        
+    except ValueError as e:
+        if "LLM_API_KEY" in str(e):
+            display_error("LLM_API_KEY is not set in configuration. Please configure it in the Configuration menu.")
+        else:
+            display_error(f"Configuration error: {e}")
+        input("\nPress Enter to continue...")
+    except requests.exceptions.RequestException as e:
+        display_error(f"Failed to connect to LLM API: {e}")
+        input("\nPress Enter to continue...")
+    except Exception as e:
+        display_error(f"Failed to generate technical report: {e}")
+        input("\nPress Enter to continue...")
             return
             
         display_info(f"Generating technical report for {main_symbol} vs {benchmark_symbol}...")
@@ -789,8 +869,71 @@ def handle_remove_symbol():
         display_error(f"Failed to remove symbol: {e}")
         input("\nPress Enter to continue...")
 
+def handle_configuration():
+    """
+    Handle configuration operations
+    """
+    # Configuration file path
+    config_path = os.path.join(os.path.dirname(__file__), "..", "config", "qstudio-configuration.json")
+    
+    while True:
+        # Load current configuration
+        with open(config_path, 'r') as f:
+            config = json.load(f)
+        
+        # Display current configuration
+        clear_screen()
+        display_header()
+        print("\nCONFIGURATION")
+        print("=" * 50)
+        print(f"1. LLM API URL: {config['LLM_API_URL']}")
+        print(f"2. LLM API KEY: {'*' * len(config['LLM_API_KEY']) if config['LLM_API_KEY'] else 'Not set'}")
+        print(f"3. LLM MODEL: {config['LLM_MODEL']}")
+        print("=" * 50)
+        
+        # Get user choice
+        print("\nSelect option to edit (1-3), or 0 to go back:")
+        try:
+            choice = int(input("Choice: "))
+            
+            if choice == 0:
+                break
+            elif choice == 1:
+                new_value = input(f"Enter new LLM API URL (current: {config['LLM_API_URL']}): ")
+                if new_value:
+                    config['LLM_API_URL'] = new_value
+            elif choice == 2:
+                new_value = input(f"Enter new LLM API KEY (current: {'*' * len(config['LLM_API_KEY']) if config['LLM_API_KEY'] else 'Not set'}): ")
+                if new_value:
+                    config['LLM_API_KEY'] = new_value
+            elif choice == 3:
+                new_value = input(f"Enter new LLM MODEL (current: {config['LLM_MODEL']}): ")
+                if new_value:
+                    config['LLM_MODEL'] = new_value
+            else:
+                display_error("Invalid choice. Please select 0-3.")
+                input("\nPress Enter to continue...")
+                continue
+                
+            # Save configuration
+            with open(config_path, 'w') as f:
+                json.dump(config, f, indent=4)
+                
+            display_success("Configuration updated successfully!")
+            input("\nPress Enter to continue...")
+            
+        except ValueError:
+            display_error("Please enter a valid number.")
+            input("\nPress Enter to continue...")
+        except Exception as e:
+            display_error(f"Error updating configuration: {e}")
+            input("\nPress Enter to continue...")
+
+
 def handle_utilities():
-    """Handle utility operations"""
+    """
+    Handle utilities operations
+    """
     options = [
         "Generate Random Equities",
         "Clean Random Equity Folder",
@@ -820,7 +963,7 @@ def run_menu_interface():
     """Run the main menu interface"""
     while True:
         display_main_menu()
-        choice = get_user_choice(6)
+        choice = get_user_choice(9)  # Updated from 6 to 9 to include Configuration option
         
         if choice == 1:
             handle_data_management()
@@ -837,6 +980,8 @@ def run_menu_interface():
             open_onlinedoc()
             display_success("Documentation opened in browser!")
             input("\nPress Enter to continue...")
+        elif choice == 9:
+            handle_configuration()
         elif choice == 0:
             if HAS_COLORAMA:
                 print(Fore.GREEN + Style.BRIGHT + "\nThank you for using QStudio!" + Style.RESET_ALL)

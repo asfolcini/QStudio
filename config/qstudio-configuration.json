@@ -1,0 +1,5 @@
+{
+  "LLM_API_URL": "https://test-cx-api.giorgioarmani.tech/_v1/llm/proxy/v1/chat/completions",
+  "LLM_API_KEY": "",
+  "LLM_MODEL": "qwen"
+}
