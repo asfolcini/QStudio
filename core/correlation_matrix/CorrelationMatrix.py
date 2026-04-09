@@ -41,7 +41,7 @@ class CorrelationMatrix:
         df = df.reset_index()
         df = df[['Date', 'Close', 'Symbol']]
 
-        df_pivot = df.pivot('Date', 'Symbol', 'Close').reset_index()
+        df_pivot = df.pivot(index='Date', columns='Symbol', values='Close').reset_index()
 
         corr_df = df_pivot.corr(method='pearson')
         corr_df.head().reset_index()

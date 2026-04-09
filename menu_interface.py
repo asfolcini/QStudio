@@ -862,11 +862,50 @@ def datahub_update(_symbols):
 
 def datahub_show():
     """
-    DATAHUB_SHOW: show content by listing the REPO folder
+    DATAHUB_SHOW: show content by listing the REPO folder with date range for each file
     """
     print("DATAHUB Repository")
-    for file in os.listdir(cfg.DATA_REPOSITORY):
-        print(" - " + str(file))
+    print("{:<15} {:<12} {:<12}".format("TICKER", "START", "END"))
+    print("-" * 40)
+    
+    # Get all CSV files and sort them for consistent output
+    csv_files = [f for f in os.listdir(cfg.DATA_REPOSITORY) if f.endswith('.csv')]
+    csv_files.sort()
+    
+    for file in csv_files:
+        filepath = os.path.join(cfg.DATA_REPOSITORY, file)
+        try:
+            # Read just the Date column to minimize memory usage
+            if os.path.getsize(filepath) > 0:  # Check if file is not empty
+                # Read the first row to get the start date
+                first_row = pandas.read_csv(filepath, usecols=['Date'], nrows=1)
+                
+                # Read the last row to get the end date
+                # Using chunksize to efficiently read only the last row
+                chunk_size = 10000
+                last_chunk = None
+                for chunk in pandas.read_csv(filepath, usecols=['Date'], chunksize=chunk_size):
+                    last_chunk = chunk
+                
+                if len(first_row) == 0:
+                    start_date = "No data"
+                    end_date = "No data"
+                else:
+                    start_date = first_row['Date'].iloc[0]
+                    if last_chunk is not None and len(last_chunk) > 0:
+                        end_date = last_chunk['Date'].iloc[-1]  # Last row of the last chunk
+                    else:
+                        end_date = start_date  # Only one row in file
+                        
+                ticker = file.replace('.csv', '')
+                print("{:<15} {:<12} {:<12}".format(ticker, start_date, end_date))
+            else:
+                ticker = file.replace('.csv', '')
+                print("{:<15} {:<12} {:<12}".format(ticker, "Empty", "Empty"))
+                
+        except Exception as e:
+            ticker = file.replace('.csv', '')
+            print("{:<15} {:<12} {:<12}".format(ticker, "Error", "Error"))
 
 def config_symbols():
     """

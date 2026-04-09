@@ -110,11 +110,18 @@ class Datahub:
         UPDATE DATA FROM YAHOO FINANCE for the whole symbol list
         """
         for symbol in self.get_symbols():
-            print("Updating historical data for ticker "+str(symbol)+"...", end='')
-
-            res, data = self.download_data(symbol)
-            if res:
-                print("done")
+            result = self.download_data(symbol)
+            if result:
+                # result is a tuple (success, last_date)
+                last_date = result[1]
+                # To get row count, we need to read the CSV file
+                fp = str(cfg.DATA_REPOSITORY) + str(symbol) + '.csv'
+                if os.path.exists(fp):
+                    dataset = pandas.read_csv(fp)
+                    row_count = len(dataset)
+                else:
+                    row_count = 0
+                print(f"Updating historical data for ticker {symbol} lastdate: {last_date} rows: {row_count}")
             else:
-                print("FAILED!")
+                print(f"Updating historical data for ticker {symbol} ... FAILED!")
 
