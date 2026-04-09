@@ -354,7 +354,7 @@ def handle_technical_report():
         # Display the report
         clear_screen()
         display_header()
-        print(f"\n\U0001f4c8 AI-POWERED TECHNICAL REPORT: {ticker}")
+        print(f"\nAI-POWERED TECHNICAL REPORT: {ticker}")
         print("=" * 70)
         
         # Display features
@@ -370,7 +370,10 @@ def handle_technical_report():
         
         # Display AI-generated report
         print("\n2. AI ANALYSIS")
-        print("\033[94m" + "\U0001f916 AI-GENERATED CONTENT" + "\033[0m")  # Blue text with robot emoji
+        if HAS_COLORAMA:
+            print(Fore.CYAN + "AI-GENERATED CONTENT" + Style.RESET_ALL)
+        else:
+            print("AI-GENERATED CONTENT")
         print("-" * 70)
         print(result["llm_report"])
         print("-" * 70)
@@ -391,83 +394,8 @@ def handle_technical_report():
     except Exception as e:
         display_error(f"Failed to generate technical report: {e}")
         input("\nPress Enter to continue...")
-            return
             
-        display_info(f"Generating technical report for {main_symbol} vs {benchmark_symbol}...")
-        
-        # Simulate technical analysis data (in a real implementation, this would call actual analysis functions)
-        print(f"\n📊 TECHNICAL REPORT: {main_symbol} vs {benchmark_symbol}")
-        print("=" * 70)
-        
-        # Support & Resistance
-        print("1. SUPPORT & RESISTANCE LEVELS")
-        print("   • Key resistance: $175.50")
-        print("   • Key support: $162.25") 
-        print("   • Recent breakout: $172.30")
-        print("   • Moving average support: $165.80")
-        
-        # RSI Analysis
-        print("\n2. RSI ANALYSIS")
-        print("   • Current RSI: 62.3")
-        print("   • Status: Neutral (Not overbought/oversold)")
-        print("   • Trend confirmation: Bullish")
-        print("   • RSI divergence: None detected")
-        
-        # Moving Average Confluence
-        print("\n3. MOVING AVERAGE CONFLUENCE")
-        print("   • 20-day MA: $168.45")
-        print("   • 50-day MA: $165.20")
-        print("   • 200-day MA: $158.75")
-        print("   • Current position: Above all MAs")
-        print("   • MA slope: Positive (upward trending)")
-        
-        # Supply/Demand Zones
-        print("\n4. SUPPLY/DOMAND ZONES")
-        print("   • Previous high: $175.80")
-        print("   • Previous low: $158.20")
-        print("   • Volume-weighted average: $165.30")
-        print("   • Recent volume spike: 125% of average")
-        
-        # Benchmark Comparison
-        print("\n5. BENCHMARK COMPARISON")
-        print("   • Relative strength: +3.2% vs SPY")
-        print("   • Beta coefficient: 1.08")
-        print("   • Correlation with benchmark: 0.87")
-        print("   • Sector performance: Above sector average")
-        
-        # Volatility Analysis
-        print("\n6. VOLATILITY ANALYSIS")
-        print("   • Current volatility: 2.1% (daily)")
-        print("   • Historical average: 1.8%")
-        print("   • Anomaly detected: +17% above average")
-        print("   • Statistical bias: Slight bullish bias")
-        print("   • Rolling 30-day volatility: 2.3%")
-        
-        # Anomalies
-        print("\n7. ANOMALIES DETECTED")
-        print("   • Volatility spike: +17% above 30-day average")
-        print("   • Volume surge: 125% of normal")
-        print("   • Price action: Bullish engulfing pattern")
-        
-        # Trading Recommendations
-        print("\n8. TRADING RECOMMENDATIONS")
-        print("   • Outlook: Bullish continuation")
-        print("   • Risk/reward: 1:1.5")
-        print("   • Entry point: $168.50")
-        print("   • Stop loss: $162.00")
-        print("   • Target: $175.00")
-        print("   • Time horizon: Short to medium term")
-        
-        # Additional Insights
-        print("\n9. ADDITIONAL INSIGHTS")
-        print("   • Momentum indicator: Strong positive")
-        print("   • Market sentiment: Bullish")
-        print("   • Position sizing: Moderate risk")
-        print("   • Recommended action: Hold/Increase position")
-        
-        print("\n" + "=" * 70)
-        display_success("Technical report generated successfully!")
-        input("\nPress Enter to continue...")
+
         
     except Exception as e:
         display_error(f"Failed to generate technical report: {e}")
@@ -636,7 +564,7 @@ def handle_financial_analysis():
         "Volatility Analysis",
         "Autocorrelation",
         "Market Behavior Detection",
-        "Technical Report"
+        "AI-Powered Technical Report"
     ]
     
     while True:
@@ -874,7 +802,7 @@ def handle_configuration():
     Handle configuration operations
     """
     # Configuration file path
-    config_path = os.path.join(os.path.dirname(__file__), "..", "config", "qstudio-configuration.json")
+    config_path = os.path.join(os.path.dirname(__file__), "config", "qstudio-configuration.json")
     
     while True:
         # Load current configuration
