@@ -770,12 +770,18 @@ def header():
     """
     HEADER
     """
-    print("-" * 120)
-    print(" Q S t u d i o   " + str(cfg.VERSION))
+    print("-" * 100)
 
-    print(" " + datetime.date.today().strftime("%Y") + " (c) "+str(cfg.AUTHOR))
-    print(" www.surprisalx.com")
-    print("-" * 120)
+    print("               ___")
+    print("              /,_ \\    _,")
+    print("              |/ )/   / |            Q S t u d i o")
+    print("                //  _/  |            q u a n t   a n a l y s i s   p l a t f o r m   " + str(cfg.VERSION))
+    print("               / ( /   _)")
+    print("              /   `   _/)            copyright © " + datetime.date.today().strftime("%Y") + " " + str(cfg.AUTHOR))
+    print("              \\  ~=-   /,            www.surprisalx.com")
+    print("       ^~^~^~^~^~^~^~^~^~^~^~^~")
+    print()
+    print("-" * 100)
 
 
 # -----------------------------------------------------------------------------------------------------------------------

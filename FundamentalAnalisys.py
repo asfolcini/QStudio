@@ -42,10 +42,10 @@ def generate_report(data, ticker):
     report_it = f"""
     Analisi dei Fondamentali di {ticker}:
 
-    - Capitalizzazione di mercato: {data['market_cap']:,} USD
-    - Prezzo corrente: {data['price']} USD
-    - Utili per azione (EPS): {data['eps']} USD
-    - Fatturato: {data['revenue']:,} USD
+    - Capitalizzazione di mercato: {data['market_cap']:,}
+    - Prezzo corrente: {data['price']}
+    - Utili per azione (EPS): {data['eps']}
+    - Fatturato: {data['revenue']:,}
     - Crescita del fatturato (annuale): {data['revenue_growth']*100:.2f}%
     - Crescita trimestrale del fatturato (su base annua): {data['quarterly_revenue_growth']*100:.2f}%
     - Crescita degli utili per azione (stima trimestrale): {data['earnings_estimate']*100:.2f}%
@@ -59,10 +59,10 @@ def generate_report(data, ticker):
     report_en = f"""
     Fundamental Analysis of {ticker}:
 
-    - Market Capitalization: {data['market_cap']:,} USD
-    - Current Price: {data['price']} USD
-    - Earnings per Share (EPS): {data['eps']} USD
-    - Revenue: {data['revenue']:,} USD
+    - Market Capitalization: {data['market_cap']:,}
+    - Current Price: {data['price']}
+    - Earnings per Share (EPS): {data['eps']}
+    - Revenue: {data['revenue']:,}
     - Annual Revenue Growth: {data['revenue_growth']*100:.2f}%
     - Quarterly Revenue Growth (YoY): {data['quarterly_revenue_growth']*100:.2f}%
     - Earnings Estimate (Quarterly Growth): {data['earnings_estimate']*100:.2f}%

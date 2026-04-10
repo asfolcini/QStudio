@@ -3,3 +3,5 @@
 /Scripts/
 /Lib/
 config/qstudio-configuration.json
+cache/
+config/qstudio-configuration.json
