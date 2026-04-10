@@ -13,15 +13,32 @@ To install QStudio, follow these steps:
 3. Install dependencies: `pip install -r requirements.txt`
 4. Run QStudio: `python qstudio.py --help`
 
-## Usage
+## New Features & Enhancements
 
-QStudio offers a variety of commands for different analyses. Here are some examples:
+### Caching System
+QStudio now includes an intelligent caching system to reduce redundant API calls and computations:
+- **AI Reports Caching**: Automatically caches AI-generated technical reports for each ticker
+- **Screener Results Caching**: Caches multi-ticker screener results for the current day
+- **Daily Expiration**: Cache files expire at midnight and regenerate the next day
+- **Automatic Loading**: System automatically loads cached results when available
+- **Manual Cache Clearing**: Use "Clear Cache" option in Utilities menu to reset all cached data
+
+### Enhanced User Interface
+- **PrettyTable Formatting**: Improved table layouts with better readability
+- **Currency-Agnostic Display**: Removed currency symbols for international compatibility
+- **Color-Coded Results**: Enhanced visual presentation for easier scanning
+
+### Usage Examples
 
 - Show correlation matrix: `python qstudio.py --correlation_matrix`
 - Visualize yields: `python qstudio.py --yields --symbols AAPL,GOOGL`
 - Measure volatility: `python qstudio.py --volatility --symbols MSFT`
+- Run interactive menu: `python qstudio.py --menu`
 
 For more detailed usage instructions, refer to the [documentation](https://surprisalx.com/qstudio/index.php).
+
+## Security Notice
+Sensitive configuration files (like `config/qstudio-configuration.json`) are automatically ignored by `.gitignore` to prevent accidental commits of API keys and other sensitive data.
 
 ## Licence
 n/a
