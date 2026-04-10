@@ -1,0 +1,5 @@
+{
+    "LLM_API_URL": "https://your-actual-api-url.com",
+    "LLM_API_KEY": "your-real-api-key-here",
+    "LLM_MODEL": "qwen"
+}
