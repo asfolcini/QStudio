@@ -12,7 +12,7 @@ current_file_dir = os.path.dirname(__file__)
 PROJECT_DIR = os.path.abspath(os.path.join(current_file_dir, os.pardir))
 
 # QStudio version
-VERSION = "v0.4.0"
+VERSION = "v0.5.0"
 
 # Author
 AUTHOR="Alberto Sfolcini <a.sfolcini@gmail.com>"
