@@ -31,6 +31,15 @@ try:
 except ImportError:
     HAS_COLORAMA = False
 
+# Import Rich for enhanced terminal UI
+from rich.console import Console
+from rich.table import Table
+from rich.panel import Panel
+from rich.prompt import Prompt
+from rich.markdown import Markdown
+from rich.style import Style
+from rich import box
+
 # Import datetime for random_equity function
 import datetime
 
@@ -545,7 +554,9 @@ def handle_screener():
                         "patterns": patterns,
                         "signal": signal,
                         "reliability": reliability,
-                        "volume": features.get("volume", 0)
+                        "volume": features.get("volume", 0),
+                        "sma20": features.get("sma20", 0),
+                        "sma50": features.get("sma50", 0)
                     })
                     
                 except Exception as e:
@@ -673,13 +684,13 @@ def handle_screener():
                     
                     # More comprehensive structural analysis
                     struct_table.add_row(["Current Price", f"{detailed_result['price']:.2f}"])
-                    struct_table.add_row(["20-Day SMA", f"{features.get('sma20', detailed_result['price']):.2f}"])
-                    struct_table.add_row(["50-Day SMA", f"{features.get('sma50', detailed_result['price']):.2f}"])
+                    struct_table.add_row(["20-Day SMA", f"{detailed_result.get('sma20', detailed_result['price']):.2f}"])
+                    struct_table.add_row(["50-Day SMA", f"{detailed_result.get('sma50', detailed_result['price']):.2f}"])
                     
                     # Supply/Demand Zone (based on price relationship)
-                    if detailed_result['price'] > features.get('sma20', detailed_result['price']) * 1.02:
+                    if detailed_result['price'] > detailed_result.get('sma20', detailed_result['price']) * 1.02:
                         struct_table.add_row(["Supply Zone", f"{detailed_result['price'] * 1.02:.2f}"])
-                    elif detailed_result['price'] < features.get('sma20', detailed_result['price']) * 0.98:
+                    elif detailed_result['price'] < detailed_result.get('sma20', detailed_result['price']) * 0.98:
                         struct_table.add_row(["Demand Zone", f"{detailed_result['price'] * 0.98:.2f}"])
                         
                     if detailed_result['support_level']:
@@ -952,13 +963,13 @@ def handle_screener():
                     print("\nSTRUCTURAL ELEMENTS")
                     # More comprehensive structural analysis
                     print(f"   • Current Price: {detailed_result['price']:.2f}")
-                    print(f"   • 20-Day SMA: {features.get('sma20', detailed_result['price']):.2f}")
-                    print(f"   • 50-Day SMA: {features.get('sma50', detailed_result['price']):.2f}")
+                    print(f"   • 20-Day SMA: {detailed_result.get('sma20', detailed_result['price']):.2f}")
+                    print(f"   • 50-Day SMA: {detailed_result.get('sma50', detailed_result['price']):.2f}")
                     
                     # Supply/Demand Zone (based on price relationship)
-                    if detailed_result['price'] > features.get('sma20', detailed_result['price']) * 1.02:
+                    if detailed_result['price'] > detailed_result.get('sma20', detailed_result['price']) * 1.02:
                         print(f"   • Supply Zone: {detailed_result['price'] * 1.02:.2f}")
-                    elif detailed_result['price'] < features.get('sma20', detailed_result['price']) * 0.98:
+                    elif detailed_result['price'] < detailed_result.get('sma20', detailed_result['price']) * 0.98:
                         print(f"   • Demand Zone: {detailed_result['price'] * 0.98:.2f}")
                         
                     if detailed_result['support_level']:
@@ -1645,18 +1656,63 @@ def datahub_update(_symbols):
     s = Datahub(loadfromconfig=False)
     s.set_symbols(_symbols)
     s.update_data()
+    
+    # Update symbol names if needed
+    try:
+        # Load existing symbol names
+        symbol_names = {}
+        try:
+            with open(cfg.SYMBOLS_NAMES_FILEPATH, 'r') as f:
+                data = json.load(f)
+                if isinstance(data, dict) and 'tickers' in data:
+                    for ticker in data['tickers']:
+                        symbol_names[ticker['symbol']] = ticker['name']
+                elif isinstance(data, list):
+                    for ticker in data:
+                        if isinstance(ticker, dict) and 'symbol' in ticker:
+                            symbol_names[ticker['symbol']] = ticker.get('name', ticker['symbol'])
+        except:
+            pass
+            
+        # Get new symbols that need names
+        new_symbols = []
+        for symbol in _symbols.split(','):
+            symbol = symbol.strip()
+            if symbol and symbol not in symbol_names:
+                new_symbols.append(symbol)
+                
+        # Get names for new symbols
+        for symbol in new_symbols:
+            ticker_info = s.get_ticker_info(symbol)
+            symbol_names[symbol] = ticker_info['name']
+            
+        # Save updated symbol names
+        updated_data = {
+            "tickers": [
+                {"symbol": symbol, "name": name} 
+                for symbol, name in symbol_names.items()
+            ]
+        }
+        with open(cfg.SYMBOLS_NAMES_FILEPATH, 'w') as f:
+            json.dump(updated_data, f, indent=2)
+            
+    except Exception as e:
+        print(f"Warning: Could not update symbol names: {e}")
 
 def datahub_show():
     """
     DATAHUB_SHOW: show content by listing the REPO folder with date range for each file
     """
     print("DATAHUB Repository")
-    print("{:<15} {:<12} {:<12}".format("TICKER", "START", "END"))
-    print("-" * 40)
+    print("{:<15} {:<35} {:<12} {:<12}".format("TICKER", "COMPANY NAME", "START", "END"))
+    print("-" * 75)
     
     # Get all CSV files and sort them for consistent output
     csv_files = [f for f in os.listdir(cfg.DATA_REPOSITORY) if f.endswith('.csv')]
     csv_files.sort()
+    
+    # Load symbol names for display
+    symbol_name_map = load_symbol_names()
     
     for file in csv_files:
         filepath = os.path.join(cfg.DATA_REPOSITORY, file)
@@ -1665,7 +1721,6 @@ def datahub_show():
             if os.path.getsize(filepath) > 0:  # Check if file is not empty
                 # Read the first row to get the start date
                 first_row = pandas.read_csv(filepath, usecols=['Date'], nrows=1)
-                
                 # Read the last row to get the end date
                 # Using chunksize to efficiently read only the last row
                 chunk_size = 10000
@@ -1684,22 +1739,57 @@ def datahub_show():
                         end_date = start_date  # Only one row in file
                         
                 ticker = file.replace('.csv', '')
-                print("{:<15} {:<12} {:<12}".format(ticker, start_date, end_date))
+                # Get company name for display
+                company_name = symbol_name_map.get(ticker, ticker)
+                print("{:<15} {:<35} {:<12} {:<12}".format(ticker, company_name, start_date, end_date))
             else:
                 ticker = file.replace('.csv', '')
-                print("{:<15} {:<12} {:<12}".format(ticker, "Empty", "Empty"))
+                # Get company name for display
+                company_name = symbol_name_map.get(ticker, ticker)
+                print("{:<15} {:<35} {:<12} {:<12}".format(ticker, company_name, "Empty", "Empty"))
                 
         except Exception as e:
             ticker = file.replace('.csv', '')
-            print("{:<15} {:<12} {:<12}".format(ticker, "Error", "Error"))
+            # Get company name for display
+            company_name = symbol_name_map.get(ticker, ticker)
+            print("{:<15} {:<35} {:<12} {:<12}".format(ticker, company_name, "Error", "Error"))
+
+def load_symbol_names():
+    """
+    Load symbol names from JSON file if it exists, otherwise return empty dict
+    """
+    symbol_names = {}
+    try:
+        # Try to load from the new JSON file with names
+        with open(cfg.SYMBOLS_NAMES_FILEPATH, 'r') as f:
+            data = json.load(f)
+            if isinstance(data, dict) and 'tickers' in data:
+                for ticker in data['tickers']:
+                    symbol_names[ticker['symbol']] = ticker['name']
+            elif isinstance(data, list):
+                # Handle old format
+                for ticker in data:
+                    if isinstance(ticker, dict) and 'symbol' in ticker:
+                        symbol_names[ticker['symbol']] = ticker.get('name', ticker['symbol'])
+    except:
+        pass
+    return symbol_names
 
 def config_symbols():
     """
-    CONFIG_SYMBOLS: show configured synmbols in config symbol file
+    CONFIG_SYMBOLS: show configured symbols in config symbol file
     """
     print("CONFIGURED Symbols in " + cfg.DATA_REPOSITORY)
+    print("{:<15} {:<35}".format("TICKER", "COMPANY NAME"))
+    print("-" * 52)
+    
+    # Load symbol names for display
+    symbol_name_map = load_symbol_names()
+    
     for x in Datahub(loadfromconfig=True).get_symbols():
-        print(" - " + str(x))
+        # Show ticker with company name if available
+        company_name = symbol_name_map.get(x, x)
+        print("{:<15} {:<35}".format(x, company_name))
 
 def config_show():
     """

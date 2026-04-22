@@ -9,6 +9,7 @@ import yfinance as yf
 import os
 import pandas
 from datetime import datetime
+import json
 
 
 class Datahub:
@@ -85,6 +86,23 @@ class Datahub:
                 if cfg.VERBOSE: print("Download from yfinance failed")
                 return pandas.DataFrame()
 
+
+    def get_ticker_info(self, symbol):
+        """
+        GET TICKER INFO from Yahoo Finance
+        """
+        try:
+            hq = yf.Ticker(symbol)
+            info = hq.info
+            return {
+                'symbol': symbol,
+                'name': info.get('longName', symbol)
+            }
+        except:
+            return {
+                'symbol': symbol,
+                'name': symbol
+            }
 
     def download_data(self, symbol):
         """

@@ -1,0 +1,60 @@
+{
+    "tickers": [
+        {
+            "symbol": "FTSEMIB.MI",
+            "name": "FTSE MIB"
+        },
+        {
+            "symbol": "^GDAXI",
+            "name": "DAX"
+        },
+        {
+            "symbol": "ENI.MI",
+            "name": "Eni S.p.A."
+        },
+        {
+            "symbol": "RACE.MI",
+            "name": "Ferrari N.V."
+        },
+        {
+            "symbol": "CPR.MI",
+            "name": "Compagnia di San Paolo S.p.A."
+        },
+        {
+            "symbol": "PST.MI",
+            "name": "Poste Italiane S.p.A."
+        },
+        {
+            "symbol": "G.MI",
+            "name": "Generali S.p.A."
+        },
+        {
+            "symbol": "BAMI.MI",
+            "name": "Banco Amici S.p.A."
+        },
+        {
+            "symbol": "AZM.MI",
+            "name": "Azimut S.p.A."
+        },
+        {
+            "symbol": "LDO.MI",
+            "name": "Leonardo S.p.A."
+        },
+        {
+            "symbol": "STLAM.MI",
+            "name": "Stellantis N.V."
+        },
+        {
+            "symbol": "ISP.MI",
+            "name": "Intesa Sanpaolo S.p.A."
+        },
+        {
+            "symbol": "BGN.MI",
+            "name": "Banca Generali S.p.A."
+        },
+        {
+            "symbol": "IF.MI",
+            "name": "Intesa Sanpaolo S.p.A."
+        }
+    ]
+}

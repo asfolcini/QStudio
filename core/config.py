@@ -12,7 +12,7 @@ current_file_dir = os.path.dirname(__file__)
 PROJECT_DIR = os.path.abspath(os.path.join(current_file_dir, os.pardir))
 
 # QStudio version
-VERSION = "v0.5.0"
+VERSION = "v0.5.1"
 
 # Author
 AUTHOR="Alberto Sfolcini <a.sfolcini@gmail.com>"
@@ -38,6 +38,9 @@ STRATEGY_EVALUATOR_SHORT_TERM = 63   # 3 months
 
 # File that contains the symbol list separated by comma
 SYMBOLS_FILEPATH = PROJECT_DIR + "/config/symbols"
+
+# File that contains symbol names
+SYMBOLS_NAMES_FILEPATH = PROJECT_DIR + "/config/symbols_with_names.json"
 
 # Historical data repository path (with trailing /)
 DATA_REPOSITORY = PROJECT_DIR + "/data/"
